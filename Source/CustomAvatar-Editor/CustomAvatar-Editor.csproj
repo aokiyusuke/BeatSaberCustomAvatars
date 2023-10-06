@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>CustomAvatar</RootNamespace>
+    <AssemblyName>CustomAvatar</AssemblyName>
+    <TargetFramework>net472</TargetFramework>
+    <DefineConstants>UNITY_EDITOR</DefineConstants>
+    <UnityProjectDir>$(ProjectDir)..\..\Unity\BeatSaberCustomAvatars</UnityProjectDir>
+    <PathMap>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)=$(MSBuildProjectName)</PathMap>
+    <LangVersion>11</LangVersion>
+    <Nullable>disable</Nullable>
+  <Platforms>x64</Platforms>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration) == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DynamicBone">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\DynamicBone.dll</HintPath>
+      <Private>false</Private>
+      <Aliases>BeatSaberDynamicBone</Aliases>
+    </Reference>
+    <Reference Include="FinalIK">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\FinalIK.dll</HintPath>
+      <Private>false</Private>
+      <Aliases>BeatSaberFinalIK</Aliases>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\Libraries\UnityEditor.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(ProjectName).csproj.user" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CustomAvatar\Scripts\AvatarDescriptor.cs" Link="Scripts\AvatarDescriptor.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\ComboReachedEvent.cs" Link="Scripts\ComboReachedEvent.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\EventFilterBehaviour.cs" Link="Scripts\EventFilterBehaviour.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\EventManager.cs" Link="Scripts\EventManager.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\EveryNthComboFilter.cs" Link="Scripts\EveryNthComboFilter.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\FirstPersonExclusion.cs" Link="Scripts\FirstPersonExclusion.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\UpperArmRelaxer.cs" Link="Scripts\UpperArmRelaxer.cs" />
+    <Compile Include="..\CustomAvatar\Logging\ILogger.cs" Link="Logging\ILogger.cs" />
+    <Compile Include="..\CustomAvatar\Logging\UnityDebugLogger.cs" Link="Logging\UnityDebugLogger.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\PoseManager.cs" Link="Scripts\PoseManager.cs" />
+    <Compile Include="..\CustomAvatar\Utilities\IKHelper.cs" Link="Utilities\IKHelper.cs" />
+    <Compile Include="..\CustomAvatar\Scripts\VRIKManager.cs" Link="Scripts\VRIKManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyToOutput Include="$(ProjectDir)..\..\Packaging\CustomAvatar-Editor\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**\*.*" />
+  </ItemGroup>
+  <Target Name="CheckBSMTInstalled" AfterTargets="BeforeBuild" Condition="'$(BSMTTaskAssembly)' == ''">
+    <Error Text="The BeatSaberModdingTools.Tasks NuGet package doesn't seem to be installed. Please restore NuGet packages before building the project." />
+  </Target>
+  <Target Name="SetAssemblyVersion" AfterTargets="CheckBSMTInstalled">
+    <GetManifestInfo ManifestPath="../CustomAvatar/manifest.json">
+      <Output TaskParameter="BasePluginVersion" PropertyName="BasePluginVersion" />
+    </GetManifestInfo>
+
+    <PropertyGroup>
+      <Version>$(BasePluginVersion)</Version>
+    </PropertyGroup>
+  </Target>
+  <Target Name="Organize" AfterTargets="AfterBuild">
+    <!-- remove deps.json file since it's not used -->
+    <Delete Files="$(TargetDir)$(TargetName).deps.json" />
+
+    <!-- make sure we have a clean slate -->
+    <RemoveDir Directories="$(PublishDir)" />
+    
+    <MakeDir Directories="$(PublishDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PublishDir)" />
+    
+    <!-- copy static files -->
+    <Copy SourceFiles="@(CopyToOutput)" DestinationFiles="@(CopyToOutput->'$(PublishDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="CopyUnityProjectFiles" AfterTargets="AfterBuild" Condition="$(UnityProjectDir) != ''">
+    <ItemGroup>
+      <CopyToUnityProjectFolder Include="$(PublishDir)**\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CopyToUnityProjectFolder)" DestinationFiles="@(CopyToUnityProjectFolder->'$(UnityProjectDir)\Assets\Libraries\%(RecursiveDir)%(Filename)%(Extension)')" Condition="!Exists('$(UnityProjectDir)\Assets\Libraries\%(RecursiveDir)%(Filename)%(Extension)') OR '%(Extension)' != '.meta'" />
+  </Target>
+  <ItemGroup>
+    <PackageReference Include="BeatSaberModdingTools.Tasks" Version="1.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.5.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.17.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
