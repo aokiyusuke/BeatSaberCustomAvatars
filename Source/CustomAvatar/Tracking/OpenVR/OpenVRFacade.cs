@@ -1,17 +1,17 @@
 //  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Text;
@@ -20,7 +20,9 @@ using Valve.VR;
 
 namespace CustomAvatar.Tracking.OpenVR
 {
+#pragma warning disable IDE0065
     using OpenVR = Valve.VR.OpenVR;
+#pragma warning restore IDE0065
 
     internal class OpenVRFacade
     {
@@ -54,14 +56,14 @@ namespace CustomAvatar.Tracking.OpenVR
                 return null;
             }
 
-            if (error != ETrackedPropertyError.TrackedProp_Success && error != ETrackedPropertyError.TrackedProp_BufferTooSmall)
+            if (error is not ETrackedPropertyError.TrackedProp_Success and not ETrackedPropertyError.TrackedProp_BufferTooSmall)
             {
                 throw new OpenVRException($"Failed to get property '{property}' for device at index {deviceIndex}: {error}", property, error);
             }
 
             if (length > 0)
             {
-                StringBuilder stringBuilder = new StringBuilder((int)length);
+                var stringBuilder = new StringBuilder((int)length);
                 OpenVR.System.GetStringTrackedDeviceProperty(deviceIndex, property, stringBuilder, length, ref error);
 
                 if (error != ETrackedPropertyError.TrackedProp_Success)
@@ -124,7 +126,12 @@ namespace CustomAvatar.Tracking.OpenVR
 
             float frameDuration = 1f / displayFrequency;
 
-            return frameDuration - secondsSinceLastVsync + vsyncToPhotons;
+            // secondsSinceLastVsync just keeps increasing forever on AMD 7900 XTX GPUs.
+            // According to the docs, secondsSinceLastVsync should always be <= frameDuration
+            // (see https://github.com/ValveSoftware/openvr/wiki/IVRSystem::GetTimeSinceLastVsync).
+            // This seems to be a bug with SteamVR. The Mathf.Max below reduces the impact of this unexpected
+            // return value since (frameDuration - secondsSinceLastVsync) is usually quite small anyway.
+            return Mathf.Max(frameDuration - secondsSinceLastVsync, 0) + vsyncToPhotons;
         }
 
         private static void CopySign(ref float sizeVal, float signVal)

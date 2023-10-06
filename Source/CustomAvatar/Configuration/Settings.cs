@@ -1,17 +1,17 @@
 //  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
@@ -20,8 +20,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using CustomAvatar.Avatar;
 using CustomAvatar.Player;
-using CustomAvatar.Lighting;
 using CustomAvatar.Tracking;
+using CustomAvatar.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -29,22 +29,24 @@ namespace CustomAvatar.Configuration
 {
     internal class Settings
     {
-        public readonly ObservableValue<bool> isAvatarVisibleInFirstPerson = new ObservableValue<bool>();
-        public readonly ObservableValue<bool> moveFloorWithRoomAdjust = new ObservableValue<bool>();
-        public readonly ObservableValue<AvatarResizeMode> resizeMode = new ObservableValue<AvatarResizeMode>(AvatarResizeMode.Height);
-        public readonly ObservableValue<FloorHeightAdjust> floorHeightAdjust = new ObservableValue<FloorHeightAdjust>(FloorHeightAdjust.Off);
-        public string previousAvatarPath = null;
-        public readonly ObservableValue<float> playerArmSpan = new ObservableValue<float>(VRPlayerInput.kDefaultPlayerArmSpan);
-        public bool calibrateFullBodyTrackingOnStart = false;
-        public readonly ObservableValue<bool> enableLocomotion = new ObservableValue<bool>(true);
-        public readonly ObservableValue<float> cameraNearClipPlane = new ObservableValue<float>(0.1f);
-        public bool showAvatarInSmoothCamera = true;
-        public readonly Lighting lighting = new Lighting();
-        public readonly Mirror mirror = new Mirror();
-        public readonly AutomaticFullBodyCalibration automaticCalibration = new AutomaticFullBodyCalibration();
-        public readonly FullBodyMotionSmoothing fullBodyMotionSmoothing = new FullBodyMotionSmoothing();
+        public ObservableValue<bool> isAvatarVisibleInFirstPerson { get; } = new ObservableValue<bool>();
+        public ObservableValue<bool> moveFloorWithRoomAdjust { get; } = new ObservableValue<bool>();
+        public ObservableValue<AvatarResizeMode> resizeMode { get; } = new ObservableValue<AvatarResizeMode>(AvatarResizeMode.Height);
+        public ObservableValue<FloorHeightAdjustMode> floorHeightAdjust { get; } = new ObservableValue<FloorHeightAdjustMode>(FloorHeightAdjustMode.Off);
+        public string previousAvatarPath { get; set; }
+        public ObservableValue<float> playerEyeHeight { get; } = new ObservableValue<float>(BeatSaberUtilities.kDefaultPlayerEyeHeight);
+        public ObservableValue<float> playerArmSpan { get; } = new ObservableValue<float>(BeatSaberUtilities.kDefaultPlayerArmSpan);
+        public bool calibrateFullBodyTrackingOnStart { get; set; }
+        public ObservableValue<bool> enableLocomotion { get; } = new ObservableValue<bool>(true);
+        public ObservableValue<float> cameraNearClipPlane { get; } = new ObservableValue<float>(0.1f);
+        public ObservableValue<bool> showAvatarInSmoothCamera { get; } = new ObservableValue<bool>(true);
+        public bool showAvatarInMirrors { get; set; } = true;
+        public ObservableValue<SkinWeights> skinWeights { get; } = new ObservableValue<SkinWeights>(SkinWeights.FourBones);
+        public Mirror mirror { get; } = new Mirror();
+        public AutomaticFullBodyCalibration automaticCalibration { get; } = new AutomaticFullBodyCalibration();
 
-        [JsonProperty(PropertyName = "avatarSpecificSettings", Order = int.MaxValue)] private Dictionary<string, AvatarSpecificSettings> _avatarSpecificSettings = new Dictionary<string, AvatarSpecificSettings>();
+        [JsonProperty(PropertyName = "avatarSpecificSettings", Order = int.MaxValue)]
+        private readonly SortedDictionary<string, AvatarSpecificSettings> _avatarSpecificSettings = new();
 
         [OnSerializing]
         private void OnSerializing(StreamingContext context)
@@ -62,67 +64,36 @@ namespace CustomAvatar.Configuration
         {
             foreach (string fileName in _avatarSpecificSettings.Keys.ToList())
             {
-                if (!File.Exists(Path.Combine(PlayerAvatarManager.kCustomAvatarsPath, fileName)) || Path.IsPathRooted(fileName))
+                if (!PathHelpers.IsValidFileName(fileName) || !File.Exists(Path.Combine(PlayerAvatarManager.kCustomAvatarsPath, fileName)))
                 {
                     _avatarSpecificSettings.Remove(fileName);
                 }
             }
         }
 
-        public class Lighting
-        {
-            public ShadowQuality shadowQuality = ShadowQuality.Disable;
-            public ShadowResolution shadowResolution = ShadowResolution.Low;
-            public EnvironmentLighting environment = new EnvironmentLighting();
-            public LightingGroup sabers = new LightingGroup();
-        }
-
-        public class LightingGroup
-        {
-            [JsonProperty(Order = int.MinValue)]
-            public bool enabled = false;
-            public float intensity = 1;
-        }
-
-        public class EnvironmentLighting : LightingGroup
-        {
-            public EnvironmentLightingType type = EnvironmentLightingType.Dynamic;
-            public int pixelLightCount = 2;
-        }
-
         public class Mirror
         {
-            public Vector2 size = new Vector2(4f, 2f);
-            public float renderScale = 1.0f;
-            public int antiAliasing = 2;
-        }
-
-        public class FullBodyMotionSmoothing
-        {
-            public readonly TrackedPointSmoothing waist = new TrackedPointSmoothing { position = 0.5f, rotation = 0.2f };
-            public readonly TrackedPointSmoothing feet = new TrackedPointSmoothing { position = 0.5f, rotation = 0.2f };
-        }
-
-        public class TrackedPointSmoothing
-        {
-            public float position;
-            public float rotation;
+            public ObservableValue<float> renderScale { get; } = new ObservableValue<float>(1);
+            public ObservableValue<int> antiAliasingLevel { get; } = new ObservableValue<int>(1);
+            public bool renderInExternalCameras { get; set; } = false;
         }
 
         public class AutomaticFullBodyCalibration
         {
-            public float legOffset = 0.15f;
-            public float pelvisOffset = 0.1f;
+            public float legOffset { get; set; } = 0.15f;
+            public float pelvisOffset { get; set; } = 0.1f;
 
-            public WaistTrackerPosition waistTrackerPosition = WaistTrackerPosition.Front;
+            public WaistTrackerPosition waistTrackerPosition { get; set; }
         }
 
         public class AvatarSpecificSettings
         {
-            public readonly ObservableValue<bool> useAutomaticCalibration = new ObservableValue<bool>();
-            public readonly ObservableValue<bool> bypassCalibration = new ObservableValue<bool>();
-            public readonly ObservableValue<bool> ignoreExclusions = new ObservableValue<bool>(false);
-            public bool allowMaintainPelvisPosition = false;
+            public ObservableValue<bool> useAutomaticCalibration { get; } = new ObservableValue<bool>();
+            public ObservableValue<bool> bypassCalibration { get; } = new ObservableValue<bool>();
+            public ObservableValue<bool> ignoreExclusions { get; } = new ObservableValue<bool>(false);
+            public bool allowMaintainPelvisPosition { get; set; } = false;
+
+            public bool enableLegacyShaderRepair { get; set; } = true;
         }
 
         public AvatarSpecificSettings GetAvatarSettings(string fileName)

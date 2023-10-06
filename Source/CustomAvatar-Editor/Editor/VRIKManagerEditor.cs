@@ -1,22 +1,23 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
@@ -26,15 +27,15 @@ namespace CustomAvatar.Editor
     [CustomEditor(typeof(VRIKManager))]
     public class VRIKManagerEditor : UnityEditor.Editor
     {
-        private static readonly Regex kRegex = new Regex("(?<!^)(?=[A-Z])");
+        private static readonly Regex kRegex = new("(?<!^)(?=[A-Z])");
 
-        private readonly Dictionary<string, bool> foldouts = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> _foldouts = new();
 
         public override void OnInspectorGUI()
         {
             string previousSection = null;
 
-            foreach (var field in typeof(VRIKManager).GetFields())
+            foreach (FieldInfo field in typeof(VRIKManager).GetFields())
             {
                 int lastSeparatorIndex = field.Name.LastIndexOf('_');
                 string section;
@@ -64,15 +65,15 @@ namespace CustomAvatar.Editor
 
                         if (previousSubSections.Contains(subSection)) continue;
 
-                        if (!foldouts.ContainsKey(subSection))
+                        if (!_foldouts.ContainsKey(subSection))
                         {
-                            foldouts.Add(subSection, true);
+                            _foldouts.Add(subSection, true);
                         }
 
-                        if (i == 0 || foldouts[subSections[i - 1]])
+                        if (i == 0 || _foldouts[subSections[i - 1]])
                         {
                             EditorGUI.indentLevel = i;
-                            foldouts[subSection] = EditorGUILayout.Foldout(foldouts[subSection], CamelCaseToNatural(subSection), true);
+                            _foldouts[subSection] = EditorGUILayout.Foldout(_foldouts[subSection], CamelCaseToNatural(subSection), true);
                         }
                     }
                 }
@@ -99,7 +100,7 @@ namespace CustomAvatar.Editor
         {
             foreach (string subSection in section.Split('_'))
             {
-                if (!foldouts[subSection]) return false;
+                if (!_foldouts[subSection]) return false;
             }
 
             return true;

@@ -1,17 +1,17 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace CustomAvatar.Logging
@@ -25,34 +25,34 @@ namespace CustomAvatar.Logging
             this.name = name;
         }
 
-        public void Trace(object message) { }
+        public void LogTrace(object message) { }
 
-        public void Debug(object message)
+        public void LogDebug(object message)
         {
             UnityEngine.Debug.Log(FormatMessage("DEBUG", message));
         }
 
-        public void Notice(object message)
+        public void LogNotice(object message)
         {
             UnityEngine.Debug.Log(FormatMessage("NOTICE", message));
         }
 
-        public void Info(object message)
+        public void LogInformation(object message)
         {
             UnityEngine.Debug.Log(FormatMessage("INFO", message));
         }
 
-        public void Warning(object message)
+        public void LogWarning(object message)
         {
             UnityEngine.Debug.LogWarning(FormatMessage("WARNING", message));
         }
 
-        public void Error(object message)
+        public void LogError(object message)
         {
             UnityEngine.Debug.LogError(FormatMessage("ERROR", message));
         }
 
-        public void Critical(object message)
+        public void LogCritical(object message)
         {
             UnityEngine.Debug.LogError(FormatMessage("CRITICAL", message));
         }

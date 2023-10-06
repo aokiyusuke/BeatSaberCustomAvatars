@@ -1,105 +1,75 @@
-﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
-//
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-using System;
-using System.IO;
+﻿using System.IO;
 using CustomAvatar.Logging;
-using Newtonsoft.Json;
 using CustomAvatar.Utilities.Converters;
+using IPA.Utilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace CustomAvatar.Configuration
 {
-    internal class SettingsManager : IDisposable
+    internal class SettingsManager
     {
-        public readonly string kSettingsPath = Path.Combine(Environment.CurrentDirectory, "UserData", "CustomAvatars.json");
+        public static readonly string kSettingsPath = Path.Combine(UnityGame.UserDataPath, "CustomAvatars.json");
 
-        public Settings settings;
+        private readonly ILogger<SettingsManager> _logger;
+        private readonly JsonSerializer _jsonSerializer;
 
-        private ILogger<SettingsManager> _logger;
-
-        internal SettingsManager(ILogger<SettingsManager> logger)
+        public SettingsManager(ILogger<SettingsManager> logger)
         {
             _logger = logger;
-
-            Load();
-        }
-        
-        public void Dispose()
-        {
-            Save();
-        }
-
-        public void Load()
-        {
-            _logger.Info($"Loading settings from '{kSettingsPath}'");
-
-            if (!File.Exists(kSettingsPath))
+            _jsonSerializer = JsonSerializer.CreateDefault(new JsonSerializerSettings
             {
-                _logger.Info("File does not exist, using default settings");
-
-                settings = new Settings();
-
-                return;
-            }
-
-            try
-            {
-                using (var reader = new StreamReader(kSettingsPath))
-                using (var jsonReader = new JsonTextReader(reader))
-                {
-                    var serializer = GetSerializer();
-                    settings = serializer.Deserialize<Settings>(jsonReader) ?? new Settings();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Failed to load settings from file; using default settings");
-                _logger.Error(ex);
-
-                settings = new Settings();
-            }
-        }
-
-        public void Save()
-        {
-            _logger.Info($"Saving settings to '{kSettingsPath}'");
-
-            using (var writer = new StreamWriter(kSettingsPath))
-            using (var jsonWriter = new JsonTextWriter(writer))
-            {
-                var serializer = GetSerializer();
-                serializer.Serialize(jsonWriter, settings);
-                jsonWriter.Flush();
-            }
-        }
-
-        private JsonSerializer GetSerializer()
-        {
-            return new JsonSerializer
-            {
-                Formatting = Formatting.Indented,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 Converters = {
                     new StringEnumConverter(),
                     new FloatJsonConverter(),
                     new Vector2JsonConverter(),
                     new ObservableValueJsonConverter()
-                }
-            };
+                },
+                Error = HandleDeserializationError,
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            });
+        }
+
+        public Settings settings { get; private set; }
+
+        public void Load()
+        {
+            if (!File.Exists(kSettingsPath))
+            {
+                settings = new Settings();
+                return;
+            }
+
+            _logger.LogInformation($"Loading settings from '{kSettingsPath}'");
+
+            using (var reader = new StreamReader(kSettingsPath))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                settings = _jsonSerializer.Deserialize<Settings>(jsonReader) ?? new Settings();
+            }
+        }
+
+        public void Save()
+        {
+            _logger.LogInformation($"Saving settings to '{kSettingsPath}'");
+
+            using (var writer = new StreamWriter(kSettingsPath))
+            using (var jsonWriter = new JsonTextWriter(writer))
+            {
+                _jsonSerializer.Serialize(jsonWriter, settings);
+                jsonWriter.Flush();
+            }
+        }
+
+        private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        {
+            ErrorContext ctx = e.ErrorContext;
+
+            _logger.LogError($"Failed to deserialize property '{ctx.Path}': {ctx.Error}");
+
+            ctx.Handled = true;
         }
     }
 }

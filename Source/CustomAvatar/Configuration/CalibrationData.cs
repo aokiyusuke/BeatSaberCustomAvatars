@@ -1,40 +1,41 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using CustomAvatar.Logging;
-using CustomAvatar.Player;
-using CustomAvatar.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CustomAvatar.Logging;
+using CustomAvatar.Player;
+using CustomAvatar.Utilities;
+using IPA.Utilities;
 using UnityEngine;
 
 namespace CustomAvatar.Configuration
 {
     internal class CalibrationData : IDisposable
     {
-        public static readonly string kCalibrationDataFilePath = Path.Combine(Path.GetFullPath("UserData"), "CustomAvatars.CalibrationData.dat");
+        public static readonly string kCalibrationDataFilePath = Path.Combine(UnityGame.UserDataPath, "CustomAvatars.CalibrationData.dat");
         public static readonly byte[] kCalibrationDataFileSignature = { 0x43, 0x41, 0x63, 0x64 }; // Custom Avatars calibration data (CAcd)
         public static readonly byte kCalibrationDataFileVersion = 1;
 
-        public readonly FullBodyCalibration automaticCalibration = new FullBodyCalibration();
+        public FullBodyCalibration automaticCalibration { get; } = new FullBodyCalibration();
 
-        private readonly Dictionary<string, FullBodyCalibration> _manualCalibration = new Dictionary<string, FullBodyCalibration>();
+        private readonly Dictionary<string, FullBodyCalibration> _manualCalibration = new();
 
         private readonly ILogger<CalibrationData> _logger;
 
@@ -48,8 +49,8 @@ namespace CustomAvatar.Configuration
             }
             catch (Exception ex)
             {
-                _logger.Error("Failed to load calibration data");
-                _logger.Error(ex);
+                _logger.LogError("Failed to load calibration data");
+                _logger.LogError(ex);
             }
         }
 
@@ -61,14 +62,17 @@ namespace CustomAvatar.Configuration
             }
             catch (Exception ex)
             {
-                _logger.Error("Failed to save calibration data");
-                _logger.Error(ex);
+                _logger.LogError("Failed to save calibration data");
+                _logger.LogError(ex);
             }
         }
 
         public FullBodyCalibration GetAvatarManualCalibration(string fileName)
         {
-            if (!IsValidFileName(fileName)) throw new ArgumentException("Invalid file name", nameof(fileName));
+            if (!PathHelpers.IsValidFileName(fileName))
+            {
+                throw new ArgumentException("Invalid file name", nameof(fileName));
+            }
 
             if (!_manualCalibration.ContainsKey(fileName))
             {
@@ -81,8 +85,8 @@ namespace CustomAvatar.Configuration
         private void Load()
         {
             if (!File.Exists(kCalibrationDataFilePath)) return;
-            
-            _logger.Info($"Reading calibration data from '{kCalibrationDataFilePath}'");
+
+            _logger.LogInformation($"Reading calibration data from '{kCalibrationDataFilePath}'");
 
             using (var fileStream = new FileStream(kCalibrationDataFilePath, FileMode.Open, FileAccess.Read))
             using (var reader = new BinaryReader(fileStream, Encoding.UTF8))
@@ -91,25 +95,25 @@ namespace CustomAvatar.Configuration
 
                 if (reader.ReadByte() != kCalibrationDataFileVersion)
                 {
-                    _logger.Warning("Invalid file version");
+                    _logger.LogWarning("Invalid file version");
                     return;
                 }
 
-                automaticCalibration.waist     = reader.ReadPose();
-                automaticCalibration.leftFoot  = reader.ReadPose();
+                automaticCalibration.waist = reader.ReadPose();
+                automaticCalibration.leftFoot = reader.ReadPose();
                 automaticCalibration.rightFoot = reader.ReadPose();
 
                 int count = reader.ReadInt32();
 
-                _logger.Trace($"Reading {count} calibrations");
+                _logger.LogTrace($"Reading {count} calibrations");
 
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     string fileName = reader.ReadString();
 
-                    if (!IsValidFileName(fileName))
+                    if (!PathHelpers.IsValidFileName(fileName))
                     {
-                        _logger.Warning($"'{fileName}' is not a valid file name; skipped");
+                        _logger.LogWarning($"'{fileName}' is not a valid file name; skipped");
                         continue;
                     }
 
@@ -117,19 +121,19 @@ namespace CustomAvatar.Configuration
 
                     if (!File.Exists(fullPath))
                     {
-                        _logger.Warning($"'{fullPath}' no longer exists; skipped");
+                        _logger.LogWarning($"'{fullPath}' no longer exists; skipped");
                         continue;
                     }
 
-                    _logger.Trace($"Got calibration data for '{fileName}'");
+                    _logger.LogTrace($"Got calibration data for '{fileName}'");
 
                     if (!_manualCalibration.ContainsKey(fileName))
                     {
                         _manualCalibration.Add(fileName, new FullBodyCalibration());
                     }
 
-                    _manualCalibration[fileName].waist     = reader.ReadPose();
-                    _manualCalibration[fileName].leftFoot  = reader.ReadPose();
+                    _manualCalibration[fileName].waist = reader.ReadPose();
+                    _manualCalibration[fileName].leftFoot = reader.ReadPose();
                     _manualCalibration[fileName].rightFoot = reader.ReadPose();
                 }
             }
@@ -137,7 +141,7 @@ namespace CustomAvatar.Configuration
 
         private void Save()
         {
-            _logger.Info($"Saving calibration data to '{kCalibrationDataFilePath}'");
+            _logger.LogInformation($"Saving calibration data to '{kCalibrationDataFilePath}'");
 
             using (var fileStream = new FileStream(kCalibrationDataFilePath, FileMode.OpenOrCreate, FileAccess.Write))
             {
@@ -168,11 +172,6 @@ namespace CustomAvatar.Configuration
             File.SetAttributes(kCalibrationDataFilePath, FileAttributes.Hidden);
         }
 
-        private bool IsValidFileName(string str)
-        {
-            return !string.IsNullOrEmpty(str) && !str.Any(c => Path.GetInvalidFileNameChars().Contains(c));
-        }
-        
         public class FullBodyCalibration
         {
             public Pose waist = Pose.identity;

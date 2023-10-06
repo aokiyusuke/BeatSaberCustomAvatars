@@ -1,17 +1,17 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using CustomAvatar.Avatar;
@@ -40,26 +40,26 @@ namespace CustomAvatar.Player
         {
             if (Input.GetKeyDown(KeyCode.PageDown))
             {
-                _avatarManager.SwitchToNextAvatar();
+                _ = _avatarManager.SwitchToNextAvatarAsync();
             }
             else if (Input.GetKeyDown(KeyCode.PageUp))
             {
-                _avatarManager.SwitchToPreviousAvatar();
+                _ = _avatarManager.SwitchToPreviousAvatarAsync();
             }
             else if (Input.GetKeyDown(KeyCode.Home))
             {
                 _settings.isAvatarVisibleInFirstPerson.value = !_settings.isAvatarVisibleInFirstPerson;
-                _logger.Info($"{(_settings.isAvatarVisibleInFirstPerson.value ? "Enabled" : "Disabled")} first person visibility");
+                _logger.LogInformation($"{(_settings.isAvatarVisibleInFirstPerson.value ? "Enabled" : "Disabled")} first person visibility");
             }
             else if (Input.GetKeyDown(KeyCode.End))
             {
                 _settings.resizeMode.value = (AvatarResizeMode)(((int)_settings.resizeMode.value + 1) % 3);
-                _logger.Info($"Set resize mode to {_settings.resizeMode}");
+                _logger.LogInformation($"Set resize mode to {_settings.resizeMode}");
             }
             else if (Input.GetKeyDown(KeyCode.Insert))
             {
-                _settings.floorHeightAdjust.value = (FloorHeightAdjust)(((int)_settings.floorHeightAdjust.value + 1) % Enum.GetValues(typeof(FloorHeightAdjust)).Length);
-                _logger.Info($"Set floor height adjust to {_settings.floorHeightAdjust}");
+                _settings.floorHeightAdjust.value = (FloorHeightAdjustMode)(((int)_settings.floorHeightAdjust.value + 1) % Enum.GetValues(typeof(FloorHeightAdjustMode)).Length);
+                _logger.LogInformation($"Set floor height adjust to {_settings.floorHeightAdjust}");
             }
         }
     }

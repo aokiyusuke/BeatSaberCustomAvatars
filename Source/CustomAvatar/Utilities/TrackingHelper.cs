@@ -1,23 +1,18 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-// This file is used by Code Analysis to maintain SuppressMessage
-// attributes that are applied to this project.
-// Project-level suppressions either have no target or are given
-// a specific target and scoped to a namespace, type, member, etc.
 
 using CustomAvatar.Avatar;
 using CustomAvatar.Configuration;
@@ -31,7 +26,7 @@ namespace CustomAvatar.Utilities
         private readonly Settings _settings;
         private readonly BeatSaberUtilities _beatSaberUtilities;
 
-        private TrackingHelper(Settings settings, BeatSaberUtilities beatSaberUtilities)
+        internal TrackingHelper(Settings settings, BeatSaberUtilities beatSaberUtilities)
         {
             _settings = settings;
             _beatSaberUtilities = beatSaberUtilities;
@@ -41,8 +36,7 @@ namespace CustomAvatar.Utilities
         {
             ApplyLocalPose(ref position, ref rotation, parent);
 
-            target.position = position;
-            target.rotation = rotation;
+            target.SetPositionAndRotation(position, rotation);
         }
 
         public void ApplyLocalPose(ref Vector3 position, ref Quaternion rotation, Transform parent = null)
@@ -102,7 +96,7 @@ namespace CustomAvatar.Utilities
         /// </summary>
         public void ApplyFloorOffset(SpawnedAvatar spawnedAvatar, ref Vector3 position)
         {
-            if (_settings.floorHeightAdjust == FloorHeightAdjust.Off || !spawnedAvatar) return;
+            if (_settings.floorHeightAdjust == FloorHeightAdjustMode.Off || !spawnedAvatar) return;
 
             position.y += spawnedAvatar.scaledEyeHeight - _beatSaberUtilities.GetRoomAdjustedPlayerEyeHeight();
         }
@@ -114,7 +108,7 @@ namespace CustomAvatar.Utilities
         /// </summary>
         public void ApplyFloorScaling(SpawnedAvatar spawnedAvatar, ref Vector3 position)
         {
-            if (_settings.floorHeightAdjust == FloorHeightAdjust.Off || !spawnedAvatar) return;
+            if (_settings.floorHeightAdjust == FloorHeightAdjustMode.Off || !spawnedAvatar) return;
 
             position.y *= spawnedAvatar.scaledEyeHeight / _beatSaberUtilities.GetRoomAdjustedPlayerEyeHeight();
         }
@@ -125,7 +119,7 @@ namespace CustomAvatar.Utilities
         /// </summary>
         public void ApplyInverseFloorScaling(SpawnedAvatar spawnedAvatar, ref Vector3 position)
         {
-            if (_settings.floorHeightAdjust == FloorHeightAdjust.Off || !spawnedAvatar) return;
+            if (_settings.floorHeightAdjust == FloorHeightAdjustMode.Off || !spawnedAvatar) return;
 
             position.y /= spawnedAvatar.scaledEyeHeight / _beatSaberUtilities.GetRoomAdjustedPlayerEyeHeight();
         }

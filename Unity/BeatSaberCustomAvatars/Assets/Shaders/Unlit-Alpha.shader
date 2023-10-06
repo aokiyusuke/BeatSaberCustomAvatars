@@ -6,21 +6,21 @@
 // - no per-material color
 
 Shader "Unlit/Transparent Two Sided" {
-Properties {
-    _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
-	[Enum(Off,0,Front,1,Back,2)] _Culling ("Cull", Int) = 1
-}
+    Properties {
+        _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
+        [Enum(Off,0,Front,1,Back,2)] _Culling ("Cull", Int) = 1
+    }
 
-SubShader {
-    Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
-    LOD 100
+    SubShader {
+        Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
+        LOD 100
 
-    ZWrite Off
-	Cull [_Culling]
-    Blend SrcAlpha OneMinusSrcAlpha
+        ZWrite Off
+        Cull [_Culling]
+        Blend SrcAlpha OneMinusSrcAlpha
 
-    Pass {
-        CGPROGRAM
+        Pass {
+            CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma target 2.0
@@ -31,6 +31,7 @@ SubShader {
             struct appdata_t {
                 float4 vertex : POSITION;
                 float2 texcoord : TEXCOORD0;
+
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -38,6 +39,7 @@ SubShader {
                 float4 vertex : SV_POSITION;
                 float2 texcoord : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
+
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -47,8 +49,11 @@ SubShader {
             v2f vert (appdata_t v)
             {
                 v2f o;
+
                 UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_OUTPUT(v2f, o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
@@ -61,8 +66,8 @@ SubShader {
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
-        ENDCG
+            ENDCG
+        }
     }
-}
 
 }

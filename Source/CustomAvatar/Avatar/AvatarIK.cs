@@ -1,29 +1,30 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-extern alias BeatSaberFinalIK;
 extern alias BeatSaberDynamicBone;
+extern alias BeatSaberFinalIK;
 
 using System;
 using System.Collections.Generic;
 using BeatSaberFinalIK::RootMotion.FinalIK;
 using CustomAvatar.Logging;
+using CustomAvatar.Scripts;
 using CustomAvatar.Tracking;
 using CustomAvatar.Utilities;
-using IPA.Utilities;
+using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
@@ -55,17 +56,7 @@ namespace CustomAvatar.Avatar
         private VRIK _vrik;
         private VRIKManager _vrikManager;
 
-        private bool _fixTransforms;
-
-        private List<BeatSaberDynamicBone::DynamicBone> _dynamicBones = new List<BeatSaberDynamicBone::DynamicBone>();
-        private List<TwistRelaxer> _twistRelaxers = new List<TwistRelaxer>();
-
-        private Action<BeatSaberDynamicBone::DynamicBone> _dynamicBoneOnEnableDelegate;
-        private Action<BeatSaberDynamicBone::DynamicBone> _dynamicBoneStartDelegate;
-        private Action<BeatSaberDynamicBone::DynamicBone> _dynamicBonePreUpdateDelegate;
-        private Action<BeatSaberDynamicBone::DynamicBone> _dynamicBoneLateUpdateDelegate;
-
-        private Action<TwistRelaxer> _twistRelaxerStartDelegate;
+        private readonly List<BeatSaberDynamicBone::DynamicBone> _dynamicBones = new();
 
         private IAvatarInput _input;
         private SpawnedAvatar _avatar;
@@ -77,27 +68,9 @@ namespace CustomAvatar.Avatar
         private Pose _previousParentPose;
 
         #region Behaviour Lifecycle
-        #pragma warning disable IDE0051
 
         private void Awake()
         {
-            // create delegates for dynamic bones private methods (more efficient than continuously calling Invoke)
-            _dynamicBoneOnEnableDelegate = MethodAccessor<BeatSaberDynamicBone::DynamicBone, Action<BeatSaberDynamicBone::DynamicBone>>.GetDelegate("OnEnable");
-            _dynamicBoneStartDelegate = MethodAccessor<BeatSaberDynamicBone::DynamicBone, Action<BeatSaberDynamicBone::DynamicBone>>.GetDelegate("Start");
-            _dynamicBonePreUpdateDelegate = MethodAccessor<BeatSaberDynamicBone::DynamicBone, Action<BeatSaberDynamicBone::DynamicBone>>.GetDelegate("PreUpdate");
-            _dynamicBoneLateUpdateDelegate = MethodAccessor<BeatSaberDynamicBone::DynamicBone, Action<BeatSaberDynamicBone::DynamicBone>>.GetDelegate("LateUpdate");
-
-            _twistRelaxerStartDelegate = MethodAccessor<TwistRelaxer, Action<TwistRelaxer>>.GetDelegate("Start");
-
-            foreach (TwistRelaxer twistRelaxer in GetComponentsInChildren<TwistRelaxer>())
-            {
-                if (!twistRelaxer.enabled) continue;
-
-                twistRelaxer.enabled = false;
-
-                _twistRelaxers.Add(twistRelaxer);
-            }
-
             foreach (BeatSaberDynamicBone::DynamicBone dynamicBone in GetComponentsInChildren<BeatSaberDynamicBone::DynamicBone>())
             {
                 if (!dynamicBone.enabled) continue;
@@ -109,14 +82,13 @@ namespace CustomAvatar.Avatar
         }
 
         [Inject]
-        private void Construct(IAvatarInput input, SpawnedAvatar avatar, ILogger<AvatarIK> logger, IKHelper ikHelper)
+        [UsedImplicitly]
+        private void Construct(IAvatarInput input, SpawnedAvatar avatar, ILoggerFactory loggerFactory, IKHelper ikHelper)
         {
             _input = input;
             _avatar = avatar;
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<AvatarIK>(_avatar.prefab.descriptor.name);
             _ikHelper = ikHelper;
-
-            _logger.name = _avatar.prefab.descriptor.name;
         }
 
         private void Start()
@@ -124,76 +96,54 @@ namespace CustomAvatar.Avatar
             _vrikManager = GetComponentInChildren<VRIKManager>();
 
             _vrik = _ikHelper.InitializeVRIK(_vrikManager, transform);
+            IKSolver solver = _vrik.GetIKSolver();
 
-            _fixTransforms = _vrikManager.fixTransforms;
-            _vrik.fixTransforms = false; // FixTransforms is manually called in Update
+            foreach (TwistRelaxer twistRelaxer in GetComponentsInChildren<TwistRelaxer>())
+            {
+                twistRelaxer.ik = _vrik;
+
+                if (twistRelaxer.enabled)
+                {
+                    solver.OnPostUpdate += twistRelaxer.OnPostUpdate;
+                }
+            }
+
+            foreach (UpperArmRelaxer upperArmRelaxer in GetComponentsInChildren<UpperArmRelaxer>())
+            {
+                upperArmRelaxer.ik = _vrik;
+                solver.OnPreUpdate += upperArmRelaxer.OnPreUpdate;
+                solver.OnPostUpdate += upperArmRelaxer.OnPostUpdate;
+            }
+
+            solver.OnPostUpdate += OnPostUpdate;
 
             if (_vrikManager.solver_spine_maintainPelvisPosition > 0 && !_input.allowMaintainPelvisPosition)
             {
-                _logger.Warning("solver.spine.maintainPelvisPosition > 0 is not recommended because it can cause strange pelvis rotation issues. To allow maintainPelvisPosition > 0, please set allowMaintainPelvisPosition to true for your avatar in the configuration file.");
+                _logger.LogWarning("solver.spine.maintainPelvisPosition > 0 is not recommended because it can cause strange pelvis rotation issues. To allow maintainPelvisPosition > 0, please set allowMaintainPelvisPosition to true for your avatar in the configuration file.");
                 _vrik.solver.spine.maintainPelvisPosition = 0;
             }
 
             _input.inputChanged += OnInputChanged;
-            
+
             UpdateLocomotion();
             UpdateSolverTargets();
 
-            foreach (TwistRelaxer twistRelaxer in _twistRelaxers) _twistRelaxerStartDelegate(twistRelaxer);
-
             foreach (BeatSaberDynamicBone::DynamicBone dynamicBone in _dynamicBones)
             {
-                _dynamicBoneOnEnableDelegate(dynamicBone);
-                _dynamicBoneStartDelegate(dynamicBone);
-            }
-        }
-
-        private void Update()
-        {
-            ApplyPlatformMotion();
-
-            if (_fixTransforms)
-            {
-                _vrik.solver.FixTransforms();
-            }
-
-            // DynamicBones PreUpdate
-            foreach (BeatSaberDynamicBone::DynamicBone dynamicBone in _dynamicBones)
-            {
-                _dynamicBonePreUpdateDelegate(dynamicBone);
-            }
-        }
-
-        private void LateUpdate()
-        {
-            // VRIK must run before dynamic bones
-            _vrik.UpdateSolverExternal();
-
-            // relax after VRIK update
-            foreach (TwistRelaxer twistRelaxer in _twistRelaxers)
-            {
-                twistRelaxer.Relax();
-            }
-
-            // update dynamic bones
-            foreach (BeatSaberDynamicBone::DynamicBone dynamicBone in _dynamicBones)
-            {
-                _dynamicBoneLateUpdateDelegate(dynamicBone);
+                dynamicBone.OnEnable();
+                dynamicBone.Start();
             }
         }
 
         private void OnDestroy()
         {
+            IKSolver solver = _vrik.GetIKSolver();
+            solver.OnPostUpdate -= OnPostUpdate;
+
             _input.inputChanged -= OnInputChanged;
         }
 
-        #pragma warning restore IDE0051
         #endregion
-
-        internal void AddPlatformMotion(Vector3 deltaPosition, Quaternion deltaRotation, Vector3 platformPivot)
-        {
-            _vrik.solver.AddPlatformMotion(deltaPosition, deltaRotation, platformPivot);
-        }
 
         private void ApplyPlatformMotion()
         {
@@ -206,6 +156,24 @@ namespace CustomAvatar.Avatar
 
             _vrik.solver.AddPlatformMotion(deltaPosition, deltaRotation, parent.position);
             _previousParentPose = new Pose(parent.position, parent.rotation);
+        }
+
+        private void Update()
+        {
+            foreach (BeatSaberDynamicBone::DynamicBone dynamicBone in _dynamicBones)
+            {
+                dynamicBone.Update();
+            }
+
+            ApplyPlatformMotion();
+        }
+
+        private void OnPostUpdate()
+        {
+            foreach (BeatSaberDynamicBone::DynamicBone dynamicBone in _dynamicBones)
+            {
+                dynamicBone.LateUpdate();
+            }
         }
 
         private void UpdateLocomotion()
@@ -229,11 +197,11 @@ namespace CustomAvatar.Avatar
         {
             if (!_vrik || !_vrikManager) return;
 
-            _logger.Info("Updating solver targets");
+            _logger.LogInformation("Updating solver targets");
 
-            _vrik.solver.spine.headTarget  = _vrikManager.solver_spine_headTarget;
-            _vrik.solver.leftArm.target    = _vrikManager.solver_leftArm_target;
-            _vrik.solver.rightArm.target   = _vrikManager.solver_rightArm_target;
+            _vrik.solver.spine.headTarget = _vrikManager.solver_spine_headTarget;
+            _vrik.solver.leftArm.target = _vrikManager.solver_leftArm_target;
+            _vrik.solver.rightArm.target = _vrikManager.solver_rightArm_target;
 
             if (_input.TryGetPose(DeviceUse.LeftFoot, out _) || _isCalibrationModeEnabled)
             {

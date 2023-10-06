@@ -1,4 +1,20 @@
-﻿using CustomAvatar.Avatar;
+﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//
+//  You should have received a copy of the GNU Lesser General Public License
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+using CustomAvatar.Avatar;
 using CustomAvatar.Logging;
 using CustomAvatar.Player;
 using CustomAvatar.Tracking;
@@ -12,7 +28,7 @@ namespace CustomAvatar.UI
     {
         private static readonly int kColor = Shader.PropertyToID("_Color");
 
-        private bool loaded;
+        private bool _loaded;
 
         private ILogger<ManualCalibrationHelper> _logger;
         private ShaderLoader _shaderLoader;
@@ -61,11 +77,11 @@ namespace CustomAvatar.UI
                 _leftFootRod = CreateRod();
                 _rightFootRod = CreateRod();
 
-                loaded = true;
+                _loaded = true;
             }
             else
             {
-                _logger.Error("Unlit shader not loaded; manual calibration points may not be visible");
+                _logger.LogError("Unlit shader not loaded; manual calibration points may not be visible");
             }
         }
 
@@ -78,7 +94,7 @@ namespace CustomAvatar.UI
 
         internal void OnDisable()
         {
-            if (!loaded) return;
+            if (!_loaded) return;
 
             _waistSphere.SetActive(false);
             _leftFootSphere.SetActive(false);
@@ -91,7 +107,7 @@ namespace CustomAvatar.UI
 
         private GameObject CreateCalibrationSphere()
         {
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
             sphere.layer = AvatarLayers.kAlwaysVisible;
             sphere.transform.localScale = Vector3.one * 0.1f;
@@ -102,7 +118,7 @@ namespace CustomAvatar.UI
 
         private GameObject CreateRod()
         {
-            GameObject rod = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            var rod = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
 
             rod.transform.localScale = new Vector3(0.01f, 0.5f, 0.01f);
             rod.GetComponent<Renderer>().material = _rodMaterial;
@@ -115,15 +131,13 @@ namespace CustomAvatar.UI
             if (_playerInput.TryGetUncalibratedPoseForAvatar(deviceUse, _avatarManager.currentlySpawnedAvatar, out Pose pose))
             {
                 sphere.SetActive(true);
-                sphere.transform.position = pose.position;
-                sphere.transform.rotation = pose.rotation;
+                sphere.transform.SetPositionAndRotation(pose.position, pose.rotation);
 
                 rod.SetActive(true);
                 Vector3 trackerToPoint = pose.position - avatarTarget.position;
                 Vector3 pivot = (pose.position + avatarTarget.position) * 0.5f;
                 Vector3 localScale = rod.transform.localScale;
-                rod.transform.position = pivot;
-                rod.transform.rotation = Quaternion.LookRotation(trackerToPoint) * Quaternion.Euler(90, 0, 0);
+                rod.transform.SetPositionAndRotation(pivot, Quaternion.LookRotation(trackerToPoint) * Quaternion.Euler(90, 0, 0));
                 rod.transform.localScale = new Vector3(localScale.x, trackerToPoint.magnitude * 0.5f, localScale.z);
             }
             else

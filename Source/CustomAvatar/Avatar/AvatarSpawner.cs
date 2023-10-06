@@ -1,17 +1,17 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
@@ -33,7 +33,7 @@ namespace CustomAvatar.Avatar
         private readonly DiContainer _container;
         private readonly ILogger<AvatarSpawner> _logger;
 
-        private readonly List<(Type type, Func<AvatarPrefab, bool> condition)> _componentsToAdd = new List<(Type, Func<AvatarPrefab, bool>)>();
+        private readonly List<(Type type, Func<AvatarPrefab, bool> condition)> _componentsToAdd = new();
 
         internal AvatarSpawner(DiContainer container, ILogger<AvatarSpawner> logger)
         {
@@ -82,36 +82,34 @@ namespace CustomAvatar.Avatar
 
             if (parent)
             {
-                _logger.Info($"Spawning avatar '{avatar.descriptor.name}' into '{parent.name}'");
+                _logger.LogInformation($"Spawning avatar '{avatar.descriptor.name}' into '{parent.name}'");
             }
             else
             {
-                _logger.Info($"Spawning avatar '{avatar.descriptor.name}'");
+                _logger.LogInformation($"Spawning avatar '{avatar.descriptor.name}'");
             }
 
-            DiContainer subContainer = new DiContainer(_container);
-
             GameObject avatarInstance = Object.Instantiate(avatar, parent, false).gameObject;
-            Object.Destroy(avatarInstance.GetComponent<AvatarPrefab>());
-            subContainer.QueueForInject(avatarInstance);
+            Object.DestroyImmediate(avatarInstance.GetComponent<AvatarPrefab>());
 
+            var subContainer = new DiContainer(_container);
             subContainer.Bind<AvatarPrefab>().FromInstance(avatar);
             subContainer.Bind<IAvatarInput>().FromInstance(input);
 
             SpawnedAvatar spawnedAvatar = subContainer.InstantiateComponent<SpawnedAvatar>(avatarInstance);
-
             subContainer.Bind<SpawnedAvatar>().FromInstance(spawnedAvatar);
+            subContainer.InjectGameObject(avatarInstance);
 
             foreach ((Type type, Func<AvatarPrefab, bool> condition) in _componentsToAdd)
             {
                 if (condition == null || condition(avatar))
                 {
-                    _logger.Info($"Adding component '{type.FullName}'");
+                    _logger.LogInformation($"Adding component '{type.FullName}'");
                     subContainer.InstantiateComponent(type, avatarInstance);
                 }
             }
 
-            spawnedAvatar.name = "ASDTKEYTAYK";
+            avatarInstance.SetActive(true);
 
             return spawnedAvatar;
         }

@@ -1,21 +1,23 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System.Collections;
+using System;
 using System.Reflection;
+using System.Threading.Tasks;
+using CustomAvatar.Exceptions;
 using CustomAvatar.Logging;
 using UnityEngine;
 using Zenject;
@@ -25,7 +27,6 @@ namespace CustomAvatar.Utilities
 {
     internal class ShaderLoader : IInitializable
     {
-        public bool hasErrors { get; private set; }
         public Shader stereoMirrorShader { get; private set; }
         public Shader unlitShader { get; private set; }
 
@@ -36,31 +37,38 @@ namespace CustomAvatar.Utilities
             _logger = logger;
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
-            SharedCoroutineStarter.instance.StartCoroutine(GetShaders());
+            try
+            {
+                await LoadShaders();
+
+                CheckShaderLoaded(unlitShader, "Glow Overlay");
+                CheckShaderLoaded(stereoMirrorShader, "Stereo Render");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to load shaders");
+                _logger.LogError(ex);
+            }
         }
 
-        private IEnumerator GetShaders()
+        private async Task LoadShaders()
         {
-            AssetBundleCreateRequest shadersBundleCreateRequest = AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("CustomAvatar.Resources.shaders.assets"));
-            yield return shadersBundleCreateRequest;
+            AssetBundleCreateRequest shadersBundleCreateRequest = await AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("CustomAvatar.Resources.shaders.assets"));
+            AssetBundle assetBundle = shadersBundleCreateRequest.assetBundle;
 
-            if (!shadersBundleCreateRequest.isDone || !shadersBundleCreateRequest.assetBundle)
+            if (!assetBundle)
             {
-                hasErrors = true;
-                _logger.Error("Failed to load shaders");
-                yield break;
+                throw new ShaderLoadException("Failed to load asset bundle");
             }
 
-            AssetBundleRequest assetBundleRequest = shadersBundleCreateRequest.assetBundle.LoadAllAssetsAsync<Shader>();
-            yield return assetBundleRequest;
+            AssetBundleRequest assetBundleRequest = await assetBundle.LoadAllAssetsAsync<Shader>();
 
-            if (!assetBundleRequest.isDone || assetBundleRequest.allAssets.Length == 0)
+            if (assetBundleRequest.allAssets.Length == 0)
             {
-                hasErrors = true;
-                _logger.Error("Failed to load shaders");
-                yield break;
+                assetBundle.Unload(true);
+                throw new ShaderLoadException("No assets found");
             }
 
             foreach (Object asset in assetBundleRequest.allAssets)
@@ -68,31 +76,27 @@ namespace CustomAvatar.Utilities
                 switch (asset.name)
                 {
                     case "Beat Saber Custom Avatars/Glow Overlay":
-                        unlitShader = asset as Shader;
+                        unlitShader = (Shader)asset;
                         break;
 
                     case "Beat Saber Custom Avatars/Stereo Render":
-                        stereoMirrorShader = asset as Shader;
+                        stereoMirrorShader = (Shader)asset;
                         break;
                 }
             }
 
-            CheckShaderLoaded(unlitShader, "Unlit");
-            CheckShaderLoaded(stereoMirrorShader, "Stereo Renderer");
-
-            shadersBundleCreateRequest.assetBundle.Unload(false);
+            assetBundle.Unload(false);
         }
 
         private void CheckShaderLoaded(Shader shader, string name)
         {
             if (shader)
             {
-                _logger.Info($"{name} shader loaded");
+                _logger.LogInformation($"{name} shader loaded");
             }
             else
             {
-                _logger.Error($"{name} shader not found");
-                hasErrors = true;
+                _logger.LogError($"{name} shader not found");
             }
         }
     }

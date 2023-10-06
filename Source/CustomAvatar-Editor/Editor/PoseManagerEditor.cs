@@ -1,17 +1,17 @@
 //  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using UnityEditor;
@@ -24,6 +24,9 @@ namespace CustomAvatar.Editor
     [CustomEditor(typeof(PoseManager))]
     public class PoseManagerEditor : UnityEditor.Editor
     {
+        private const string kLocalPositionSerializedPropertyName = "m_LocalPosition";
+        private const string kLocalRotationSerializedPropertyName = "m_LocalRotation";
+
         private float _sliderValue;
 
         public override void OnInspectorGUI()
@@ -33,7 +36,8 @@ namespace CustomAvatar.Editor
                 richText = true
             };
 
-            PoseManager poseManager = (PoseManager)target;
+            var poseManager = (PoseManager)target;
+            GameObject poseManagerObject = poseManager.gameObject;
 
             if (!poseManager.animator.isHuman)
             {
@@ -69,7 +73,7 @@ namespace CustomAvatar.Editor
 
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
-            
+
             if (poseManager.closedHandIsValid)
             {
                 GUILayout.Label(new GUIContent("<color='green'>\u2713</color> Closed Hands", "Finger poses for closed hands are set"), richLabel);
@@ -100,7 +104,7 @@ namespace CustomAvatar.Editor
 
             if (sliderValue != _sliderValue)
             {
-                Undo.RegisterFullObjectHierarchyUndo(poseManager.gameObject, "Animate Hands");
+                Undo.RegisterFullObjectHierarchyUndo(poseManagerObject, "Animate Hands");
                 poseManager.InterpolateHandPoses(sliderValue);
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                 _sliderValue = sliderValue;
@@ -110,14 +114,14 @@ namespace CustomAvatar.Editor
 
             if (GUILayout.Button("Mirror Left Hand Pose"))
             {
-                Undo.RegisterFullObjectHierarchyUndo(poseManager.gameObject, "Mirror Left Hand Poses");
+                Undo.RegisterFullObjectHierarchyUndo(poseManagerObject, "Mirror Left Hand Poses");
                 MirrorLeftHand(poseManager.animator);
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
 
             if (GUILayout.Button("Mirror Right Hand Pose"))
             {
-                Undo.RegisterFullObjectHierarchyUndo(poseManager.gameObject, "Mirror Right Hand Poses");
+                Undo.RegisterFullObjectHierarchyUndo(poseManagerObject, "Mirror Right Hand Poses");
                 MirrorRightHand(poseManager.animator);
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
@@ -126,54 +130,67 @@ namespace CustomAvatar.Editor
 
             if (GUILayout.Button("Reset Hands"))
             {
+                Undo.RegisterFullObjectHierarchyUndo(poseManagerObject, "Reset Hand Poses");
                 ResetHands(poseManager.animator);
+            }
+
+            if (GUILayout.Button("Reset Local Positions"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(poseManagerObject, "Reset Local Positions");
+                ResetHands(poseManager.animator, rotation: false);
+            }
+
+            if (GUILayout.Button("Reset Local Rotations"))
+            {
+                Undo.RegisterFullObjectHierarchyUndo(poseManagerObject, "Reset Local Rotations");
+                ResetHands(poseManager.animator, position: false);
             }
         }
 
         private void MirrorLeftHand(Animator animator)
         {
-            Copy(animator, HumanBodyBones.LeftThumbProximal,      HumanBodyBones.RightThumbProximal);
-            Copy(animator, HumanBodyBones.LeftThumbIntermediate,  HumanBodyBones.RightThumbIntermediate);
-            Copy(animator, HumanBodyBones.LeftThumbDistal,        HumanBodyBones.RightThumbDistal);
+            Copy(animator, HumanBodyBones.LeftThumbProximal, HumanBodyBones.RightThumbProximal);
+            Copy(animator, HumanBodyBones.LeftThumbIntermediate, HumanBodyBones.RightThumbIntermediate);
+            Copy(animator, HumanBodyBones.LeftThumbDistal, HumanBodyBones.RightThumbDistal);
 
-            Copy(animator, HumanBodyBones.LeftIndexProximal,      HumanBodyBones.RightIndexProximal);
-            Copy(animator, HumanBodyBones.LeftIndexIntermediate,  HumanBodyBones.RightIndexIntermediate);
-            Copy(animator, HumanBodyBones.LeftIndexDistal,        HumanBodyBones.RightIndexDistal);
+            Copy(animator, HumanBodyBones.LeftIndexProximal, HumanBodyBones.RightIndexProximal);
+            Copy(animator, HumanBodyBones.LeftIndexIntermediate, HumanBodyBones.RightIndexIntermediate);
+            Copy(animator, HumanBodyBones.LeftIndexDistal, HumanBodyBones.RightIndexDistal);
 
-            Copy(animator, HumanBodyBones.LeftMiddleProximal,     HumanBodyBones.RightMiddleProximal);
+            Copy(animator, HumanBodyBones.LeftMiddleProximal, HumanBodyBones.RightMiddleProximal);
             Copy(animator, HumanBodyBones.LeftMiddleIntermediate, HumanBodyBones.RightMiddleIntermediate);
-            Copy(animator, HumanBodyBones.LeftMiddleDistal,       HumanBodyBones.RightMiddleDistal);
+            Copy(animator, HumanBodyBones.LeftMiddleDistal, HumanBodyBones.RightMiddleDistal);
 
-            Copy(animator, HumanBodyBones.LeftRingProximal,       HumanBodyBones.RightRingProximal);
-            Copy(animator, HumanBodyBones.LeftRingIntermediate,   HumanBodyBones.RightRingIntermediate);
-            Copy(animator, HumanBodyBones.LeftRingDistal,         HumanBodyBones.RightRingDistal);
+            Copy(animator, HumanBodyBones.LeftRingProximal, HumanBodyBones.RightRingProximal);
+            Copy(animator, HumanBodyBones.LeftRingIntermediate, HumanBodyBones.RightRingIntermediate);
+            Copy(animator, HumanBodyBones.LeftRingDistal, HumanBodyBones.RightRingDistal);
 
-            Copy(animator, HumanBodyBones.LeftLittleProximal,     HumanBodyBones.RightLittleProximal);
+            Copy(animator, HumanBodyBones.LeftLittleProximal, HumanBodyBones.RightLittleProximal);
             Copy(animator, HumanBodyBones.LeftLittleIntermediate, HumanBodyBones.RightLittleIntermediate);
-            Copy(animator, HumanBodyBones.LeftLittleDistal,       HumanBodyBones.RightLittleDistal);
+            Copy(animator, HumanBodyBones.LeftLittleDistal, HumanBodyBones.RightLittleDistal);
         }
 
         private void MirrorRightHand(Animator animator)
         {
-            Copy(animator, HumanBodyBones.RightThumbProximal,      HumanBodyBones.LeftThumbProximal);
-            Copy(animator, HumanBodyBones.RightThumbIntermediate,  HumanBodyBones.LeftThumbIntermediate);
-            Copy(animator, HumanBodyBones.RightThumbDistal,        HumanBodyBones.LeftThumbDistal);
+            Copy(animator, HumanBodyBones.RightThumbProximal, HumanBodyBones.LeftThumbProximal);
+            Copy(animator, HumanBodyBones.RightThumbIntermediate, HumanBodyBones.LeftThumbIntermediate);
+            Copy(animator, HumanBodyBones.RightThumbDistal, HumanBodyBones.LeftThumbDistal);
 
-            Copy(animator, HumanBodyBones.RightIndexProximal,      HumanBodyBones.LeftIndexProximal);
-            Copy(animator, HumanBodyBones.RightIndexIntermediate,  HumanBodyBones.LeftIndexIntermediate);
-            Copy(animator, HumanBodyBones.RightIndexDistal,        HumanBodyBones.LeftIndexDistal);
+            Copy(animator, HumanBodyBones.RightIndexProximal, HumanBodyBones.LeftIndexProximal);
+            Copy(animator, HumanBodyBones.RightIndexIntermediate, HumanBodyBones.LeftIndexIntermediate);
+            Copy(animator, HumanBodyBones.RightIndexDistal, HumanBodyBones.LeftIndexDistal);
 
-            Copy(animator, HumanBodyBones.RightMiddleProximal,     HumanBodyBones.LeftMiddleProximal);
+            Copy(animator, HumanBodyBones.RightMiddleProximal, HumanBodyBones.LeftMiddleProximal);
             Copy(animator, HumanBodyBones.RightMiddleIntermediate, HumanBodyBones.LeftMiddleIntermediate);
-            Copy(animator, HumanBodyBones.RightMiddleDistal,       HumanBodyBones.LeftMiddleDistal);
+            Copy(animator, HumanBodyBones.RightMiddleDistal, HumanBodyBones.LeftMiddleDistal);
 
-            Copy(animator, HumanBodyBones.RightRingProximal,       HumanBodyBones.LeftRingProximal);
-            Copy(animator, HumanBodyBones.RightRingIntermediate,   HumanBodyBones.LeftRingIntermediate);
-            Copy(animator, HumanBodyBones.RightRingDistal,         HumanBodyBones.LeftRingDistal);
+            Copy(animator, HumanBodyBones.RightRingProximal, HumanBodyBones.LeftRingProximal);
+            Copy(animator, HumanBodyBones.RightRingIntermediate, HumanBodyBones.LeftRingIntermediate);
+            Copy(animator, HumanBodyBones.RightRingDistal, HumanBodyBones.LeftRingDistal);
 
-            Copy(animator, HumanBodyBones.RightLittleProximal,     HumanBodyBones.LeftLittleProximal);
+            Copy(animator, HumanBodyBones.RightLittleProximal, HumanBodyBones.LeftLittleProximal);
             Copy(animator, HumanBodyBones.RightLittleIntermediate, HumanBodyBones.LeftLittleIntermediate);
-            Copy(animator, HumanBodyBones.RightLittleDistal,       HumanBodyBones.LeftLittleDistal);
+            Copy(animator, HumanBodyBones.RightLittleDistal, HumanBodyBones.LeftLittleDistal);
         }
 
         private void Copy(Animator animator, HumanBodyBones fromBone, HumanBodyBones toBone)
@@ -181,10 +198,7 @@ namespace CustomAvatar.Editor
             Transform fromTransform = animator.GetBoneTransform(fromBone);
             Transform toTransform = animator.GetBoneTransform(toBone);
 
-            float angle;
-            Vector3 axis;
-
-            fromTransform.rotation.ToAngleAxis(out angle, out axis); // get angle and axis
+            fromTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis); // get angle and axis
 
             // mirror the axis about the plane YZ
             axis.y *= -1;
@@ -193,9 +207,9 @@ namespace CustomAvatar.Editor
             toTransform.rotation = Quaternion.AngleAxis(angle, axis); // assign it back
         }
 
-        private void ResetHands(Animator animator)
+        private void ResetHands(Animator animator, bool position = true, bool rotation = true)
         {
-            HumanBodyBones[] fingers = new HumanBodyBones[]
+            var fingers = new HumanBodyBones[]
             {
                 HumanBodyBones.LeftThumbProximal, HumanBodyBones.LeftThumbIntermediate, HumanBodyBones.LeftThumbDistal,
                 HumanBodyBones.LeftIndexProximal, HumanBodyBones.LeftIndexIntermediate, HumanBodyBones.LeftIndexDistal,
@@ -211,7 +225,18 @@ namespace CustomAvatar.Editor
 
             foreach (HumanBodyBones finger in fingers)
             {
-                PrefabUtility.RevertObjectOverride(animator.GetBoneTransform(finger), InteractionMode.UserAction);
+                Transform transform = animator.GetBoneTransform(finger);
+                var serializedObject = new SerializedObject(transform);
+
+                if (position)
+                {
+                    PrefabUtility.RevertPropertyOverride(serializedObject.FindProperty(kLocalPositionSerializedPropertyName), InteractionMode.UserAction);
+                }
+
+                if (rotation)
+                {
+                    PrefabUtility.RevertPropertyOverride(serializedObject.FindProperty(kLocalRotationSerializedPropertyName), InteractionMode.UserAction);
+                }
             }
         }
     }

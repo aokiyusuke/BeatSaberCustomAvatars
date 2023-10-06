@@ -1,7 +1,7 @@
 # Beat Saber Custom Avatars Plugin
-[![GitHub Actions Build Status](https://img.shields.io/github/workflow/status/nicoco007/BeatSaberCustomAvatars/build/develop?style=flat-square)](https://github.com/nicoco007/BeatSaberCustomAvatars/actions?query=workflow%3Abuild+branch%3Adevelop)
+[![GitHub Actions Build Status](https://img.shields.io/github/actions/workflow/status/nicoco007/BeatSaberCustomAvatars/build.yml?branch=develop&style=flat-square)](https://github.com/nicoco007/BeatSaberCustomAvatars/actions?query=workflow%3Abuild+branch%3Adevelop)
 [![Latest Release](https://img.shields.io/github/v/release/nicoco007/BeatSaberCustomAvatars?style=flat-square)](https://github.com/nicoco007/BeatSaberCustomAvatars/releases/latest)
-[![License](https://img.shields.io/github/license/nicoco007/BeatSaberCustomAvatars?style=flat-square)](https://github.com/nicoco007/BeatSaberCustomAvatars/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/nicoco007/BeatSaberCustomAvatars?style=flat-square)](https://github.com/nicoco007/BeatSaberCustomAvatars/blob/master/LICENSE.txt)
 
 ## Getting Started
 The easiest way to get Custom Avatars up and running is to use [ModAssistant](https://github.com/Assistant/ModAssistant). The latest version of Custom Avatars will always be posted in the [releases](https://github.com/nicoco007/BeatSaberCustomAvatars/releases) here, and then become available on ModAssistant a few days later. If you want to install it manually by using the releases available here or are looking for the files to create an avatar yourself, you can follow the instructions below.
@@ -17,9 +17,7 @@ Install [BeatSaberMarkupLanguage](https://github.com/monkeymanboy/BeatSaberMarku
 
 ## Usage Notes
 ### Full-Body Tracking
-The way full-body tracking works has changed as of version 5.0.0. You must now do the following for full-body tracking to work:
-- Set up your trackers' roles in SteamVR. This makes it so you no longer need to turn on your trackers in a specific order.
-- Calibrate your avatar in-game or use the "Bypass Calibration" option. Both are in the Avatars menu, under "Avatar Specific" in the settings (left-hand) pane.
+Full-body tracking requires setting up tracker roles in SteamVR. For instructions, check out [OpenXRTrackerProfiles' instructions](https://github.com/nicoco007/BeatSaber-ExtraOpenXRFeatures/tree/main/OpenXRTrackerProfiles#assigning-steamvr-tracker-roles).
 
 ## Contributing
 To resolve references and automatically copy the compiled DLL into Beat Saber's installation directory, first create files called `CustomAvatar.csproj.user` and `CustomAvatar-Editor.csproj.user` next to `Source\CustomAvatar\CustomAvatar.csproj` and `Source\CustomAvatar-Editor\CustomAvatar-Editor.csproj` respectively. Then paste in the following contents:

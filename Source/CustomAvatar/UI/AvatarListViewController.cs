@@ -1,27 +1,31 @@
 //  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using CustomAvatar.Avatar;
+using CustomAvatar.Logging;
 using CustomAvatar.Player;
+using CustomAvatar.Utilities;
 using HMUI;
-using IPA.Utilities;
+using IPA.Utilities.Async;
 using Polyglot;
 using TMPro;
 using UnityEngine;
@@ -32,34 +36,64 @@ namespace CustomAvatar.UI
 {
     internal class AvatarListViewController : ViewController, TableView.IDataSource
     {
+        private const int kMaxNumberOfConcurrentLoadingTasks = 4;
         private const string kTableCellReuseIdentifier = "AvatarListTableCell";
 
+        private ILogger<AvatarListViewController> _logger;
         private PlayerAvatarManager _avatarManager;
         private DiContainer _container;
+        private MirrorViewController _mirrorViewController;
         private PlayerOptionsViewController _playerOptionsViewController;
         private LevelCollectionViewController _levelCollectionViewController;
         private PlatformLeaderboardViewController _leaderboardViewController;
 
+        private FileSystemWatcher _fileSystemWatcher;
         private TableView _tableView;
-        private GameObject _loadingIndicator;
 
-        private readonly List<AvatarListItem> _avatars = new List<AvatarListItem>();
+        private readonly List<AvatarListItem> _avatars = new();
         private AvatarListTableCell _tableCellPrefab;
 
-        private Sprite _blankAvatarIcon;
-        private Sprite _noAvatarIcon;
+        private Texture2D _atlas;
+        private Sprite _blankAvatarSprite;
+        private Sprite _noAvatarSprite;
+        private Sprite _reloadSprite;
+        private Sprite _loadErrorSprite;
 
         [Inject]
-        internal void Construct(PlayerAvatarManager avatarManager, DiContainer container, PlayerOptionsViewController playerOptionsViewController, LevelCollectionViewController levelCollectionViewController, PlatformLeaderboardViewController leaderboardViewController)
+        internal void Construct(ILogger<AvatarListViewController> logger, PlayerAvatarManager avatarManager, DiContainer container, MirrorViewController mirrorViewController, PlayerOptionsViewController playerOptionsViewController, LevelCollectionViewController levelCollectionViewController, PlatformLeaderboardViewController leaderboardViewController)
         {
+            _logger = logger;
             _avatarManager = avatarManager;
             _container = container;
+            _mirrorViewController = mirrorViewController;
             _playerOptionsViewController = playerOptionsViewController;
             _levelCollectionViewController = levelCollectionViewController;
             _leaderboardViewController = leaderboardViewController;
         }
 
-        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        protected void Start()
+        {
+            using (Stream fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("CustomAvatar.Resources.ui.dds"))
+            {
+                _atlas = SimpleDdsLoader.LoadImage(fileStream);
+                _noAvatarSprite = Sprite.Create(_atlas, new Rect(0, 0, 256, 256), new Vector2(0.5f, 0.5f));
+                _blankAvatarSprite = Sprite.Create(_atlas, new Rect(256, 0, 256, 256), new Vector2(0.5f, 0.5f));
+                _reloadSprite = Sprite.Create(_atlas, new Rect(0, 256, 128, 128), new Vector2(0.5f, 0.5f));
+                _loadErrorSprite = Sprite.Create(_atlas, new Rect(256, 256, 256, 256), new Vector2(0.5f, 0.5f));
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            Destroy(_noAvatarSprite);
+            Destroy(_blankAvatarSprite);
+            Destroy(_reloadSprite);
+            Destroy(_atlas);
+
+            base.OnDestroy();
+        }
+
+        protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
 
@@ -67,20 +101,50 @@ namespace CustomAvatar.UI
             {
                 _tableCellPrefab = CreateTableCellPrefab();
 
-                _blankAvatarIcon = LoadSpriteFromResource("CustomAvatar.Resources.mystery-man.png");
-                _noAvatarIcon = LoadSpriteFromResource("CustomAvatar.Resources.ban.png");
-
                 CreateTableView();
                 CreateRefreshButton();
             }
 
-            if (addedToHierarchy)
-            {
-                _avatarManager.avatarChanged += OnAvatarChanged;
-                _avatarManager.avatarAdded   += OnAvatarAdded;
-                _avatarManager.avatarRemoved += OnAvatarRemoved;
+            _avatarManager.avatarChanged += OnAvatarChanged;
 
-                ReloadAvatars();
+            try
+            {
+                _fileSystemWatcher = new FileSystemWatcher(PlayerAvatarManager.kCustomAvatarsPath, "*.avatar")
+                {
+                    NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.Size
+                };
+
+                _fileSystemWatcher.Created += OnAvatarFileCreatedOrChanged;
+                _fileSystemWatcher.Changed += OnAvatarFileCreatedOrChanged;
+                _fileSystemWatcher.Deleted += OnAvatarFileDeleted;
+
+                _fileSystemWatcher.EnableRaisingEvents = true;
+
+                _logger.LogTrace($"Watching files in '{_fileSystemWatcher.Path}' ({_fileSystemWatcher.Filter})");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to create FileSystemWatcher");
+                _logger.LogError(ex);
+            }
+
+            await ReloadAvatars();
+            UpdateSelectedRow();
+        }
+
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
+        {
+            base.DidDeactivate(removedFromHierarchy, screenSystemDisabling);
+
+            _avatarManager.avatarChanged -= OnAvatarChanged;
+
+            if (_fileSystemWatcher != null)
+            {
+                _fileSystemWatcher.Created -= OnAvatarFileCreatedOrChanged;
+                _fileSystemWatcher.Changed -= OnAvatarFileCreatedOrChanged;
+                _fileSystemWatcher.Deleted -= OnAvatarFileDeleted;
+
+                _fileSystemWatcher.Dispose();
             }
         }
 
@@ -91,14 +155,17 @@ namespace CustomAvatar.UI
 
             LevelListTableCell originalTableCell = gameObject.GetComponent<LevelListTableCell>();
 
+            DestroyImmediate(originalTableCell._songBpmText.gameObject);
+            DestroyImmediate(originalTableCell._songDurationText.gameObject);
+            DestroyImmediate(originalTableCell._promoBadgeGo);
+            DestroyImmediate(originalTableCell._updatedBadgeGo);
+            DestroyImmediate(originalTableCell._favoritesBadgeImage);
+            DestroyImmediate(originalTableCell.transform.Find("BpmIcon").gameObject);
+
             AvatarListTableCell tableCell = gameObject.AddComponent<AvatarListTableCell>();
-            tableCell.Init(originalTableCell);
+            tableCell.Init(originalTableCell, _leaderboardViewController);
 
             DestroyImmediate(originalTableCell);
-            DestroyImmediate(gameObject.transform.Find("FavoritesIcon").gameObject);
-            DestroyImmediate(gameObject.transform.Find("SongTime").gameObject);
-            DestroyImmediate(gameObject.transform.Find("SongBpm").gameObject);
-            DestroyImmediate(gameObject.transform.Find("BpmIcon").gameObject);
 
             return tableCell;
         }
@@ -106,10 +173,10 @@ namespace CustomAvatar.UI
         // temporary while BSML doesn't support the new scroll buttons & indicator
         private void CreateTableView()
         {
-            RectTransform tableViewContainer = new GameObject("AvatarsTableView", typeof(RectTransform)).transform as RectTransform;
-            RectTransform tableView = new GameObject("AvatarsTableView", typeof(RectTransform), typeof(ScrollRect), typeof(Touchable), typeof(EventSystemListener)).transform as RectTransform;
-            RectTransform viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D)).transform as RectTransform;
-            RectTransform content = new GameObject("Content", typeof(RectTransform)).transform as RectTransform;
+            var tableViewContainer = (RectTransform)new GameObject("AvatarsTableView", typeof(RectTransform)).transform;
+            var tableView = (RectTransform)new GameObject("AvatarsTableView", typeof(RectTransform), typeof(ScrollRect), typeof(Touchable), typeof(EventSystemListener)).transform;
+            var viewport = (RectTransform)new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D)).transform;
+            var content = (RectTransform)new GameObject("Content", typeof(RectTransform)).transform;
 
             tableViewContainer.gameObject.SetActive(false);
 
@@ -136,9 +203,9 @@ namespace CustomAvatar.UI
 
             tableView.GetComponent<ScrollRect>().viewport = viewport;
 
-            ScrollView scrollView = tableView.gameObject.AddComponent<ScrollView>();
-            scrollView.SetField("_contentRectTransform", content);
-            scrollView.SetField("_viewport", viewport);
+            ScrollView scrollView = _container.InstantiateComponent<ScrollView>(tableView.gameObject);
+            scrollView._contentRectTransform = content;
+            scrollView._viewport = viewport;
 
             RectTransform header = Instantiate((RectTransform)_leaderboardViewController.transform.Find("HeaderPanel"), rectTransform, false);
 
@@ -149,10 +216,6 @@ namespace CustomAvatar.UI
             TextMeshProUGUI textMesh = header.Find("Text").GetComponent<TextMeshProUGUI>();
             textMesh.text = "Avatars";
 
-            _loadingIndicator = Instantiate(_leaderboardViewController.transform.Find("Container/LeaderboardTableView/LoadingControl/LoadingContainer/LoadingIndicator").gameObject, rectTransform, false);
-
-            _loadingIndicator.name = "LoadingIndicator";
-
             // buttons and indicator have images so it's easier to just copy from an existing component
             Transform scrollBar = Instantiate(_levelCollectionViewController.transform.Find("LevelsTableView/ScrollBar"), tableViewContainer, false);
 
@@ -162,14 +225,14 @@ namespace CustomAvatar.UI
             Button downButton = scrollBar.Find("DownButton").GetComponent<Button>();
             VerticalScrollIndicator verticalScrollIndicator = scrollBar.Find("VerticalScrollIndicator").GetComponent<VerticalScrollIndicator>();
 
-            scrollView.SetField("_pageUpButton", upButton);
-            scrollView.SetField("_pageDownButton", downButton);
-            scrollView.SetField("_verticalScrollIndicator", verticalScrollIndicator);
+            scrollView._pageUpButton = upButton;
+            scrollView._pageDownButton = downButton;
+            scrollView._verticalScrollIndicator = verticalScrollIndicator;
 
             _tableView = _container.InstantiateComponent<TableView>(tableView.gameObject);
-            _tableView.SetField("_preallocatedCells", new TableView.CellsGroup[0]);
-            _tableView.SetField("_isInitialized", false);
-            _tableView.SetField("_scrollView", scrollView);
+            _tableView._preallocatedCells = new TableView.CellsGroup[0];
+            _tableView._isInitialized = false;
+            _tableView._scrollView = scrollView;
 
             _tableView.SetDataSource(this, true);
 
@@ -185,7 +248,7 @@ namespace CustomAvatar.UI
 
             gameObject.name = "RefreshButton";
 
-            RectTransform rectTransform = (RectTransform)gameObject.transform;
+            var rectTransform = (RectTransform)gameObject.transform;
             rectTransform.anchorMin = new Vector2(1, 0);
             rectTransform.anchorMax = new Vector2(1, 0);
             rectTransform.offsetMin = new Vector2(-12, 2);
@@ -194,9 +257,9 @@ namespace CustomAvatar.UI
             Button button = gameObject.GetComponent<Button>();
             button.onClick.AddListener(OnRefreshButtonPressed);
             button.transform.SetParent(transform);
-            
+
             ImageView image = iconObject.GetComponent<ImageView>();
-            image.sprite = LoadSpriteFromResource("CustomAvatar.Resources.arrows-rotate.png");
+            image.sprite = _reloadSprite;
 
             HoverHint hoverHint = _container.InstantiateComponent<HoverHint>(gameObject);
             hoverHint.text = "Force reload all avatars, including the one currently spawned. This will most likely lag your game for a few seconds if you have many avatars loaded.";
@@ -204,35 +267,9 @@ namespace CustomAvatar.UI
             Destroy(gameObject.GetComponent<LocalizedHoverHint>());
         }
 
-        private Sprite LoadSpriteFromResource(string resourceName)
+        private async void OnAvatarClicked(TableView table, int row)
         {
-            Texture2D texture = new Texture2D(0, 0);
-
-            using (Stream textureStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-            {
-                byte[] textureBytes = new byte[textureStream.Length];
-                textureStream.Read(textureBytes, 0, (int)textureStream.Length);
-                texture.LoadImage(textureBytes);
-            }
-
-            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-        }
-
-        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
-        {
-            base.DidDeactivate(removedFromHierarchy, screenSystemDisabling);
-
-            if (removedFromHierarchy)
-            {
-                _avatarManager.avatarChanged -= OnAvatarChanged;
-                _avatarManager.avatarAdded   -= OnAvatarAdded;
-                _avatarManager.avatarRemoved -= OnAvatarRemoved;
-            }
-        }
-
-        private void OnAvatarClicked(TableView table, int row)
-        {
-            _avatarManager.SwitchToAvatarAsync(_avatars[row].fileName);
+            await _avatarManager.SwitchToAvatarAsync(_avatars[row].fileName, new Progress<float>(_mirrorViewController.UpdateProgress));
         }
 
         private void OnAvatarChanged(SpawnedAvatar avatar)
@@ -240,32 +277,123 @@ namespace CustomAvatar.UI
             UpdateSelectedRow();
         }
 
-        private void OnAvatarAdded(AvatarInfo avatarInfo)
+        private async void OnAvatarFileCreatedOrChanged(object sender, FileSystemEventArgs e)
         {
-            _avatars.Add(new AvatarListItem(avatarInfo));
-            ReloadData();
+            string fileName = Path.GetFileName(e.FullPath);
+            _logger.LogTrace($"File {e.ChangeType}: '{fileName}'");
+
+            await UnityMainThreadTaskScheduler.Factory.StartNew(async () =>
+            {
+                AvatarListItem item = _avatars.Find(a => a.fileName == fileName);
+
+                if (item != null)
+                {
+                    item.isLoaded = false;
+                }
+                else
+                {
+                    if (_avatarManager.TryGetCachedAvatarInfo(fileName, out AvatarInfo avatarInfo))
+                    {
+                        item = new AvatarListItem(avatarInfo, false, _blankAvatarSprite);
+                    }
+                    else
+                    {
+                        item = new AvatarListItem(Path.GetFileNameWithoutExtension(fileName), _blankAvatarSprite, fileName, false);
+                    }
+
+                    _avatars.Add(item);
+                    ReloadData();
+                }
+
+                await GetAvatarInfoAsync(item, true);
+            });
         }
 
-        private void OnAvatarRemoved(AvatarInfo avatarInfo)
+        private async void OnAvatarFileDeleted(object sender, FileSystemEventArgs e)
         {
-            _avatars.RemoveAll(a => a.fileName == avatarInfo.fileName);
-            ReloadData();
+            string fileName = Path.GetFileName(e.FullPath);
+            _logger.LogTrace($"File Deleted: '{fileName}'");
+
+            await UnityMainThreadTaskScheduler.Factory.StartNew(() =>
+            {
+                _avatars.RemoveAll(a => a.fileName == fileName);
+                ReloadData();
+            });
         }
 
-        private void OnRefreshButtonPressed()
+        private async void OnRefreshButtonPressed()
         {
-            ReloadAvatars(true);
+            await ReloadAvatars(true);
         }
 
-        private void ReloadAvatars(bool force = false)
+        private async Task ReloadAvatars(bool force = false)
         {
             _avatars.Clear();
-            _tableView.ReloadData();
+            _avatars.Add(new AvatarListItem("No Avatar", _noAvatarSprite, null, true));
 
-            SetLoading(true);
+            List<string> fileNames = _avatarManager.GetAvatarFileNames();
+            var avatarsToLoad = new List<AvatarListItem>();
 
-            _avatars.Add(new AvatarListItem("No Avatar", _noAvatarIcon));
-            _avatarManager.GetAvatarInfosAsync(avatar => _avatars.Add(new AvatarListItem(avatar)), null, ReloadData, force);
+            foreach (string fileName in fileNames)
+            {
+                if (_avatarManager.TryGetCachedAvatarInfo(fileName, out AvatarInfo avatarInfo))
+                {
+                    var item = new AvatarListItem(avatarInfo, !force, _blankAvatarSprite);
+                    _avatars.Add(item);
+
+                    if (force)
+                    {
+                        avatarsToLoad.Add(item);
+                    }
+                }
+                else
+                {
+                    var item = new AvatarListItem(Path.GetFileNameWithoutExtension(fileName), _blankAvatarSprite, fileName, false);
+                    _avatars.Add(item);
+                    avatarsToLoad.Add(item);
+                }
+            }
+
+            ReloadData();
+
+            var tasks = new List<Task>();
+
+            using (var semaphore = new SemaphoreSlim(kMaxNumberOfConcurrentLoadingTasks))
+            {
+                foreach (AvatarListItem avatarToLoad in avatarsToLoad)
+                {
+                    await semaphore.WaitAsync();
+                    tasks.Add(GetAvatarInfoAsync(avatarToLoad, force).ContinueWith((t) =>
+                    {
+                        semaphore.Release();
+                    }));
+                }
+
+                await Task.WhenAll(tasks);
+            }
+        }
+
+        private async Task GetAvatarInfoAsync(AvatarListItem avatar, bool forceReload)
+        {
+            try
+            {
+                AvatarInfo avatarInfo = await _avatarManager.GetAvatarInfo(avatar.fileName, new Progress<float>((p) =>
+                {
+                    avatar.UpdateProgress(p);
+                }), forceReload);
+
+                avatar.SetLoadedInfo(avatarInfo, _blankAvatarSprite);
+
+                // in case the order is different with the actual name
+                ReloadData();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to load avatar '{avatar.fileName}'");
+                _logger.LogError(ex);
+
+                avatar.SetException(ex, _loadErrorSprite);
+            }
         }
 
         private void ReloadData()
@@ -278,11 +406,7 @@ namespace CustomAvatar.UI
                 return string.Compare(a.name, b.name, StringComparison.CurrentCulture);
             });
 
-            _tableView.ReloadData();
-
-            SetLoading(false);
-
-            UpdateSelectedRow(true);
+            _tableView.ReloadDataKeepingPosition();
         }
 
         private void UpdateSelectedRow(bool scroll = false)
@@ -292,11 +416,6 @@ namespace CustomAvatar.UI
             if (scroll) _tableView.ScrollToCellWithIdx(currentRow, TableView.ScrollPositionType.Center, false);
 
             _tableView.SelectCellWithIdx(currentRow);
-        }
-
-        private void SetLoading(bool loading)
-        {
-            _loadingIndicator.SetActive(loading);
         }
 
         public float CellSize()
@@ -311,7 +430,7 @@ namespace CustomAvatar.UI
 
         public TableCell CellForIdx(TableView tableView, int idx)
         {
-            AvatarListTableCell tableCell = _tableView.DequeueReusableCellForIdentifier(kTableCellReuseIdentifier) as AvatarListTableCell;
+            var tableCell = _tableView.DequeueReusableCellForIdentifier(kTableCellReuseIdentifier) as AvatarListTableCell;
 
             if (!tableCell)
             {
@@ -320,11 +439,7 @@ namespace CustomAvatar.UI
             }
 
             AvatarListItem avatar = _avatars[idx];
-            Sprite icon = avatar.icon ? avatar.icon : _blankAvatarIcon;
-
-            tableCell.nameText.text = avatar.name;
-            tableCell.authorText.text = avatar.author;
-            tableCell.cover.sprite = icon;
+            tableCell.listItem = avatar;
 
             return tableCell;
         }

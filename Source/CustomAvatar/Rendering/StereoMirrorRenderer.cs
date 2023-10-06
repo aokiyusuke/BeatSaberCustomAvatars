@@ -1,22 +1,23 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2021  Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using CustomAvatar.Avatar;
 using CustomAvatar.Configuration;
 using CustomAvatar.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,34 +32,57 @@ namespace CustomAvatar.Rendering
         private const int kUserInterfaceLayer = 5;
         private const int kNonReflectedParticlesLayer = 19;
 
+        private static readonly Type[] kCameraComponentsToKeep = { typeof(Camera), typeof(BloomPrePass) };
         private static readonly int kTexturePropertyId = Shader.PropertyToID("_ReflectionTex");
         private static readonly int[] kValidAntiAliasingValues = { 1, 2, 4, 8 };
 
-        private static readonly Rect kLeftRect = new Rect(0f, 0f, 0.5f, 1f);
-        private static readonly Rect kRightRect = new Rect(0.5f, 0f, 0.5f, 1f);
-        private static readonly Rect kFullRect = new Rect(0f, 0f, 1f, 1f);
+        private static readonly Rect kLeftRect = new(0f, 0f, 0.5f, 1f);
+        private static readonly Rect kRightRect = new(0.5f, 0f, 0.5f, 1f);
+        private static readonly Rect kFullRect = new(0f, 0f, 1f, 1f);
 
         private ShaderLoader _shaderLoader;
+        private ActiveCameraManager _activeCameraManager;
         private Settings _settings;
 
         private Renderer _renderer;
         private Camera _mirrorCamera;
-        private Dictionary<Camera, RenderTexture> _renderTextures = new Dictionary<Camera, RenderTexture>();
+        private int _antiAliasing = 2;
+        private readonly Dictionary<Camera, RenderTexture> _renderTextures = new();
+
+        public float renderScale { get; set; } = 1;
+
+        public int antiAliasing
+        {
+            get => _antiAliasing;
+            set
+            {
+                if (!kValidAntiAliasingValues.Contains(value))
+                {
+                    throw new ArgumentException("Antialiasing must be one of 1, 2, 4, or 8");
+                }
+
+                _antiAliasing = value;
+            }
+        }
+
 
         #region Behaviour Lifecycle
-        #pragma warning disable IDE0051
+#pragma warning disable IDE0051
 
         [Inject]
-        private void Inject(ShaderLoader shaderLoader, Settings settings)
+        private void Inject(ShaderLoader shaderLoader, ActiveCameraManager activeCameraManager, Settings settings)
         {
             _shaderLoader = shaderLoader;
+            _activeCameraManager = activeCameraManager;
             _settings = settings;
         }
 
         private void Start()
         {
             _renderer = GetComponent<Renderer>();
-            _renderer.sharedMaterial = new Material(_shaderLoader.stereoMirrorShader);
+            _renderer.material = new Material(_shaderLoader.stereoMirrorShader);
+
+            CreateMirrorCamera();
         }
 
         private void Update()
@@ -73,13 +97,10 @@ namespace CustomAvatar.Rendering
 
             Texture mirrorTexture = GetMirrorTexture(position, up);
 
-            if (mirrorTexture)
-            {
-                _renderer.sharedMaterial.SetTexture(kTexturePropertyId, mirrorTexture);
-            }
+            _renderer.material.SetTexture(kTexturePropertyId, mirrorTexture);
         }
 
-        #pragma warning restore IDE0051
+#pragma warning restore IDE0051
         #endregion
 
         private void PrepareForNextFrame()
@@ -96,43 +117,42 @@ namespace CustomAvatar.Rendering
         {
             Camera camera = Camera.current;
 
-            if (!camera || camera == _mirrorCamera)
+            if (!camera || camera == _mirrorCamera || renderScale <= 0)
             {
-                return null;
+                return Texture2D.blackTexture;
             }
 
-            Vector3 cameraPosition = camera.transform.position;
-            Quaternion cameraRotation = camera.transform.rotation;
-            bool stereoEnabled = camera.stereoEnabled;
-            Plane plane = new Plane(reflectionPlaneNormal, reflectionPlanePosition);
-
-            // don't render if the camera is too close to the mirror to prevent errors
-            if (plane.GetDistanceToPoint(cameraPosition) <= Mathf.Epsilon || (camera.orthographic && Mathf.Abs(Vector3.Dot(camera.transform.forward, reflectionPlaneNormal)) <= Mathf.Epsilon))
+            if (!_settings.mirror.renderInExternalCameras && camera != _activeCameraManager.current)
             {
-                return null;
+                return Texture2D.blackTexture;
             }
-
-            RenderTexture renderTexture;
 
             // return immediately if we've already rendered for this frame
-            if (_renderTextures.TryGetValue(camera, out renderTexture))
+            if (_renderTextures.TryGetValue(camera, out RenderTexture renderTexture))
             {
                 return renderTexture;
             }
 
-            float renderScale = _settings.mirror.renderScale;
-            int renderWidth = (int)Mathf.Min(camera.pixelWidth * renderScale, SystemInfo.maxTextureSize);
-            int renderHeight = (int)Mathf.Min(camera.pixelHeight * renderScale, SystemInfo.maxTextureSize);
+            Transform cameraTransform = camera.transform;
+            Vector3 cameraPosition = cameraTransform.position;
+            Quaternion cameraRotation = cameraTransform.rotation;
+            var plane = new Plane(reflectionPlaneNormal, reflectionPlanePosition);
 
-            // render to double-wide texture
-            if (stereoEnabled) renderWidth *= 2;
+            // don't render if the camera is too close to the mirror to prevent errors
+            if (plane.GetDistanceToPoint(cameraPosition) <= Mathf.Epsilon || (camera.orthographic && Mathf.Abs(Vector3.Dot(camera.transform.forward, reflectionPlaneNormal)) <= Mathf.Epsilon))
+            {
+                return Texture2D.blackTexture;
+            }
 
-            int antiAliasing = kValidAntiAliasingValues.Contains(_settings.mirror.antiAliasing) ? _settings.mirror.antiAliasing : 1;
-            renderTexture = RenderTexture.GetTemporary(renderWidth, renderHeight, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default, antiAliasing);
+            bool stereoEnabled = camera.stereoEnabled;
+            int renderWidth = Mathf.RoundToInt(camera.pixelWidth * renderScale);
+            int renderHeight = Mathf.RoundToInt(camera.pixelHeight * renderScale);
+
+            renderTexture = RenderTexture.GetTemporary(Mathf.Min(stereoEnabled ? renderWidth * 2 : renderWidth, SystemInfo.maxTextureSize), Mathf.Min(renderHeight, SystemInfo.maxTextureSize), 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default, _antiAliasing);
 
             _renderTextures[camera] = renderTexture;
 
-            CreateOrUpdateMirrorCamera(camera, renderTexture);
+            UpdateMirrorCamera(camera, renderTexture);
 
             bool invertCulling = GL.invertCulling;
             GL.invertCulling = !invertCulling;
@@ -141,7 +161,7 @@ namespace CustomAvatar.Rendering
             {
                 Quaternion targetRotation = cameraRotation;
 
-                if (camera.stereoTargetEye == StereoTargetEyeMask.Both || camera.stereoTargetEye == StereoTargetEyeMask.Left)
+                if (camera.stereoTargetEye is StereoTargetEyeMask.Both or StereoTargetEyeMask.Left)
                 {
                     Vector3 targetPosition = camera.ViewportToWorldPoint(Vector3.zero, Camera.MonoOrStereoscopicEye.Left);
                     Matrix4x4 stereoProjectionMatrix = camera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Left);
@@ -149,7 +169,7 @@ namespace CustomAvatar.Rendering
                     RenderMirror(targetPosition, targetRotation, stereoProjectionMatrix, kLeftRect, reflectionPlanePosition, reflectionPlaneNormal);
                 }
 
-                if (camera.stereoTargetEye == StereoTargetEyeMask.Both || camera.stereoTargetEye == StereoTargetEyeMask.Right)
+                if (camera.stereoTargetEye is StereoTargetEyeMask.Both or StereoTargetEyeMask.Right)
                 {
                     Vector3 targetPosition = camera.ViewportToWorldPoint(Vector3.zero, Camera.MonoOrStereoscopicEye.Right);
                     Matrix4x4 stereoProjectionMatrix = camera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Right);
@@ -185,25 +205,31 @@ namespace CustomAvatar.Rendering
             _mirrorCamera.Render();
         }
 
-        private void CreateOrUpdateMirrorCamera(Camera currentCamera, RenderTexture renderTexture)
+        private void CreateMirrorCamera()
         {
-            if (!_mirrorCamera)
+            GameObject cameraGameObject = Instantiate(Camera.main.gameObject, transform);
+            cameraGameObject.name = "MirrorCamera";
+
+            foreach (Transform transform in cameraGameObject.transform)
             {
-                GameObject cameraGameObject = Instantiate(Camera.main.gameObject);
-                cameraGameObject.name = "MirrorCamera" + GetInstanceID();
-                cameraGameObject.transform.parent = transform;
-
-                DestroyImmediate(cameraGameObject.GetComponent<MainCamera>());
-                DestroyImmediate(cameraGameObject.GetComponent<AudioListener>());
-                DestroyImmediate(cameraGameObject.GetComponent<VisualEffectsController>());
-                DestroyImmediate(cameraGameObject.GetComponent("LIV.SDK.Unity.LIV"));
-
-                _mirrorCamera = cameraGameObject.GetComponent<Camera>();
-
-                _mirrorCamera.hideFlags = HideFlags.HideAndDontSave;
-                _mirrorCamera.enabled = false;
+                Destroy(transform.gameObject);
             }
 
+            foreach (Behaviour behaviour in cameraGameObject.GetComponents<Behaviour>())
+            {
+                if (!kCameraComponentsToKeep.Contains(behaviour.GetType()))
+                {
+                    Destroy(behaviour);
+                }
+            }
+
+            _mirrorCamera = cameraGameObject.GetComponent<Camera>();
+            _mirrorCamera.hideFlags = HideFlags.HideAndDontSave;
+            _mirrorCamera.enabled = false;
+        }
+
+        private void UpdateMirrorCamera(Camera currentCamera, RenderTexture renderTexture)
+        {
             _mirrorCamera.CopyFrom(currentCamera);
             _mirrorCamera.targetTexture = renderTexture;
             _mirrorCamera.depthTextureMode = DepthTextureMode.None;
@@ -229,19 +255,19 @@ namespace CustomAvatar.Rendering
             Matrix4x4 identity = Matrix4x4.identity;
 
             identity.m00 = 1f - 2f * plane.x * plane.x;
-            identity.m01 =     -2f * plane.x * plane.y;
-            identity.m02 =     -2f * plane.x * plane.z;
-            identity.m03 =     -2f * plane.x * plane.w;
+            identity.m01 = -2f * plane.x * plane.y;
+            identity.m02 = -2f * plane.x * plane.z;
+            identity.m03 = -2f * plane.x * plane.w;
 
-            identity.m10 =     -2f * plane.y * plane.x;
+            identity.m10 = -2f * plane.y * plane.x;
             identity.m11 = 1f - 2f * plane.y * plane.y;
-            identity.m12 =     -2f * plane.y * plane.z;
-            identity.m13 =     -2f * plane.y * plane.w;
+            identity.m12 = -2f * plane.y * plane.z;
+            identity.m13 = -2f * plane.y * plane.w;
 
-            identity.m20 =     -2f * plane.z * plane.x;
-            identity.m21 =     -2f * plane.z * plane.y;
+            identity.m20 = -2f * plane.z * plane.x;
+            identity.m21 = -2f * plane.z * plane.y;
             identity.m22 = 1f - 2f * plane.z * plane.z;
-            identity.m23 =     -2f * plane.z * plane.w;
+            identity.m23 = -2f * plane.z * plane.w;
 
             identity.m30 = 0f;
             identity.m31 = 0f;

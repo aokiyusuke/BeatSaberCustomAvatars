@@ -1,4 +1,20 @@
-﻿using CustomAvatar.Player;
+﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
+//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//
+//  This library is free software: you can redistribute it and/or
+//  modify it under the terms of the GNU Lesser General Public
+//  License as published by the Free Software Foundation, either
+//  version 3 of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//
+//  You should have received a copy of the GNU Lesser General Public License
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+using CustomAvatar.Player;
 using CustomAvatar.Tracking;
 using System;
 using UnityEngine;
@@ -16,9 +32,10 @@ namespace CustomAvatar.UI
 
         private IAvatarInput _playerInput;
 
-        private bool _isMeasuring;
         private float _lastUpdateTime;
         private float _lastMeasuredArmSpan;
+
+        public bool isMeasuring { get; private set; }
 
         [Inject]
         internal void Construct(VRPlayerInput playerInput)
@@ -28,14 +45,23 @@ namespace CustomAvatar.UI
 
         public void MeasureArmSpan()
         {
-            if (_isMeasuring) return;
+            if (isMeasuring) return;
             if (!_playerInput.TryGetPose(DeviceUse.LeftHand, out Pose _) || !_playerInput.TryGetPose(DeviceUse.RightHand, out Pose _)) return;
 
-            _isMeasuring = true;
+            isMeasuring = true;
             _lastMeasuredArmSpan = 0;
             _lastUpdateTime = Time.timeSinceLevelLoad;
 
             InvokeRepeating(nameof(ScanArmSpan), 0.0f, 0.1f);
+        }
+
+        public void Cancel()
+        {
+            if (!isMeasuring) return;
+
+            CancelInvoke(nameof(ScanArmSpan));
+
+            isMeasuring = false;
         }
 
         private void ScanArmSpan()
@@ -57,8 +83,8 @@ namespace CustomAvatar.UI
             {
                 CancelInvoke(nameof(ScanArmSpan));
 
+                isMeasuring = false;
                 completed?.Invoke(_lastMeasuredArmSpan);
-                _isMeasuring = false;
             }
         }
     }
