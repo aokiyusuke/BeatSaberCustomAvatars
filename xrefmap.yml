@@ -93,31 +93,21 @@ references:
   commentId: T:CustomAvatar.Avatar.AvatarLoader
   fullName: CustomAvatar.Avatar.AvatarLoader
   nameWithType: AvatarLoader
-- uid: CustomAvatar.Avatar.AvatarLoader.FromFileCoroutine(System.String,Action{CustomAvatar.Avatar.LoadedAvatar},Action{Exception},Action)
-  name: FromFileCoroutine(String, Action<LoadedAvatar>, Action<Exception>, Action)
-  href: api/CustomAvatar.Avatar.AvatarLoader.html#CustomAvatar_Avatar_AvatarLoader_FromFileCoroutine_System_String_Action_CustomAvatar_Avatar_LoadedAvatar__Action_Exception__Action_
-  commentId: M:CustomAvatar.Avatar.AvatarLoader.FromFileCoroutine(System.String,Action{CustomAvatar.Avatar.LoadedAvatar},Action{Exception},Action)
-  name.vb: FromFileCoroutine(String, Action(Of LoadedAvatar), Action(Of Exception), Action)
-  fullName: CustomAvatar.Avatar.AvatarLoader.FromFileCoroutine(System.String, Action<CustomAvatar.Avatar.LoadedAvatar>, Action<Exception>, Action)
-  fullName.vb: CustomAvatar.Avatar.AvatarLoader.FromFileCoroutine(System.String, Action(Of CustomAvatar.Avatar.LoadedAvatar), Action(Of Exception), Action)
-  nameWithType: AvatarLoader.FromFileCoroutine(String, Action<LoadedAvatar>, Action<Exception>, Action)
-  nameWithType.vb: AvatarLoader.FromFileCoroutine(String, Action(Of LoadedAvatar), Action(Of Exception), Action)
-- uid: CustomAvatar.Avatar.AvatarLoader.FromFileCoroutine*
-  name: FromFileCoroutine
-  href: api/CustomAvatar.Avatar.AvatarLoader.html#CustomAvatar_Avatar_AvatarLoader_FromFileCoroutine_
-  commentId: Overload:CustomAvatar.Avatar.AvatarLoader.FromFileCoroutine
-  isSpec: "True"
-  fullName: CustomAvatar.Avatar.AvatarLoader.FromFileCoroutine
-  nameWithType: AvatarLoader.FromFileCoroutine
-- uid: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String,Action{CustomAvatar.Avatar.AvatarPrefab},Action{Exception},Action)
-  name: LoadFromFileAsync(String, Action<AvatarPrefab>, Action<Exception>, Action)
-  href: api/CustomAvatar.Avatar.AvatarLoader.html#CustomAvatar_Avatar_AvatarLoader_LoadFromFileAsync_System_String_Action_CustomAvatar_Avatar_AvatarPrefab__Action_Exception__Action_
-  commentId: M:CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String,Action{CustomAvatar.Avatar.AvatarPrefab},Action{Exception},Action)
-  name.vb: LoadFromFileAsync(String, Action(Of AvatarPrefab), Action(Of Exception), Action)
-  fullName: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String, Action<CustomAvatar.Avatar.AvatarPrefab>, Action<Exception>, Action)
-  fullName.vb: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String, Action(Of CustomAvatar.Avatar.AvatarPrefab), Action(Of Exception), Action)
-  nameWithType: AvatarLoader.LoadFromFileAsync(String, Action<AvatarPrefab>, Action<Exception>, Action)
-  nameWithType.vb: AvatarLoader.LoadFromFileAsync(String, Action(Of AvatarPrefab), Action(Of Exception), Action)
+- uid: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String)
+  name: LoadFromFileAsync(String)
+  href: api/CustomAvatar.Avatar.AvatarLoader.html#CustomAvatar_Avatar_AvatarLoader_LoadFromFileAsync_System_String_
+  commentId: M:CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String)
+  fullName: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String)
+  nameWithType: AvatarLoader.LoadFromFileAsync(String)
+- uid: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String,System.IProgress{System.Single},System.Threading.CancellationToken)
+  name: LoadFromFileAsync(String, IProgress<Single>, CancellationToken)
+  href: api/CustomAvatar.Avatar.AvatarLoader.html#CustomAvatar_Avatar_AvatarLoader_LoadFromFileAsync_System_String_System_IProgress_System_Single__System_Threading_CancellationToken_
+  commentId: M:CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String,System.IProgress{System.Single},System.Threading.CancellationToken)
+  name.vb: LoadFromFileAsync(String, IProgress(Of Single), CancellationToken)
+  fullName: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String, System.IProgress<System.Single>, System.Threading.CancellationToken)
+  fullName.vb: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync(System.String, System.IProgress(Of System.Single), System.Threading.CancellationToken)
+  nameWithType: AvatarLoader.LoadFromFileAsync(String, IProgress<Single>, CancellationToken)
+  nameWithType.vb: AvatarLoader.LoadFromFileAsync(String, IProgress(Of Single), CancellationToken)
 - uid: CustomAvatar.Avatar.AvatarLoader.LoadFromFileAsync*
   name: LoadFromFileAsync
   href: api/CustomAvatar.Avatar.AvatarLoader.html#CustomAvatar_Avatar_AvatarLoader_LoadFromFileAsync_
@@ -267,13 +257,13 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Avatar.AvatarSpawner.RegisterComponent
   nameWithType: AvatarSpawner.RegisterComponent
-- uid: CustomAvatar.Avatar.AvatarSpawner.RegisterComponent``1(Func{CustomAvatar.Avatar.AvatarPrefab,System.Boolean})
+- uid: CustomAvatar.Avatar.AvatarSpawner.RegisterComponent``1(System.Func{CustomAvatar.Avatar.AvatarPrefab,System.Boolean})
   name: RegisterComponent<T>(Func<AvatarPrefab, Boolean>)
-  href: api/CustomAvatar.Avatar.AvatarSpawner.html#CustomAvatar_Avatar_AvatarSpawner_RegisterComponent__1_Func_CustomAvatar_Avatar_AvatarPrefab_System_Boolean__
-  commentId: M:CustomAvatar.Avatar.AvatarSpawner.RegisterComponent``1(Func{CustomAvatar.Avatar.AvatarPrefab,System.Boolean})
+  href: api/CustomAvatar.Avatar.AvatarSpawner.html#CustomAvatar_Avatar_AvatarSpawner_RegisterComponent__1_System_Func_CustomAvatar_Avatar_AvatarPrefab_System_Boolean__
+  commentId: M:CustomAvatar.Avatar.AvatarSpawner.RegisterComponent``1(System.Func{CustomAvatar.Avatar.AvatarPrefab,System.Boolean})
   name.vb: RegisterComponent(Of T)(Func(Of AvatarPrefab, Boolean))
-  fullName: CustomAvatar.Avatar.AvatarSpawner.RegisterComponent<T>(Func<CustomAvatar.Avatar.AvatarPrefab, System.Boolean>)
-  fullName.vb: CustomAvatar.Avatar.AvatarSpawner.RegisterComponent(Of T)(Func(Of CustomAvatar.Avatar.AvatarPrefab, System.Boolean))
+  fullName: CustomAvatar.Avatar.AvatarSpawner.RegisterComponent<T>(System.Func<CustomAvatar.Avatar.AvatarPrefab, System.Boolean>)
+  fullName.vb: CustomAvatar.Avatar.AvatarSpawner.RegisterComponent(Of T)(System.Func(Of CustomAvatar.Avatar.AvatarPrefab, System.Boolean))
   nameWithType: AvatarSpawner.RegisterComponent<T>(Func<AvatarPrefab, Boolean>)
   nameWithType.vb: AvatarSpawner.RegisterComponent(Of T)(Func(Of AvatarPrefab, Boolean))
 - uid: CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar(CustomAvatar.Avatar.AvatarPrefab,CustomAvatar.Tracking.IAvatarInput,Transform)
@@ -730,84 +720,285 @@ references:
   commentId: T:CustomAvatar.EventManager
   fullName: CustomAvatar.EventManager
   nameWithType: EventManager
-- uid: CustomAvatar.EventManager.ComboChangedEvent
-  name: EventManager.ComboChangedEvent
-  href: api/CustomAvatar.EventManager.ComboChangedEvent.html
-  commentId: T:CustomAvatar.EventManager.ComboChangedEvent
-  fullName: CustomAvatar.EventManager.ComboChangedEvent
-  nameWithType: EventManager.ComboChangedEvent
-- uid: CustomAvatar.EventManager.MultiplierUp
-  name: MultiplierUp
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_MultiplierUp
-  commentId: F:CustomAvatar.EventManager.MultiplierUp
-  fullName: CustomAvatar.EventManager.MultiplierUp
-  nameWithType: EventManager.MultiplierUp
-- uid: CustomAvatar.EventManager.OnBlueLightOn
-  name: OnBlueLightOn
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnBlueLightOn
-  commentId: F:CustomAvatar.EventManager.OnBlueLightOn
-  fullName: CustomAvatar.EventManager.OnBlueLightOn
-  nameWithType: EventManager.OnBlueLightOn
-- uid: CustomAvatar.EventManager.OnComboBreak
-  name: OnComboBreak
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnComboBreak
-  commentId: F:CustomAvatar.EventManager.OnComboBreak
-  fullName: CustomAvatar.EventManager.OnComboBreak
-  nameWithType: EventManager.OnComboBreak
-- uid: CustomAvatar.EventManager.OnComboChanged
-  name: OnComboChanged
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnComboChanged
-  commentId: F:CustomAvatar.EventManager.OnComboChanged
-  fullName: CustomAvatar.EventManager.OnComboChanged
-  nameWithType: EventManager.OnComboChanged
-- uid: CustomAvatar.EventManager.OnLevelFail
-  name: OnLevelFail
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnLevelFail
-  commentId: F:CustomAvatar.EventManager.OnLevelFail
-  fullName: CustomAvatar.EventManager.OnLevelFail
-  nameWithType: EventManager.OnLevelFail
-- uid: CustomAvatar.EventManager.OnLevelFinish
-  name: OnLevelFinish
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnLevelFinish
-  commentId: F:CustomAvatar.EventManager.OnLevelFinish
-  fullName: CustomAvatar.EventManager.OnLevelFinish
-  nameWithType: EventManager.OnLevelFinish
-- uid: CustomAvatar.EventManager.OnLevelStart
-  name: OnLevelStart
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnLevelStart
-  commentId: F:CustomAvatar.EventManager.OnLevelStart
-  fullName: CustomAvatar.EventManager.OnLevelStart
-  nameWithType: EventManager.OnLevelStart
-- uid: CustomAvatar.EventManager.OnMenuEnter
-  name: OnMenuEnter
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnMenuEnter
-  commentId: F:CustomAvatar.EventManager.OnMenuEnter
-  fullName: CustomAvatar.EventManager.OnMenuEnter
-  nameWithType: EventManager.OnMenuEnter
-- uid: CustomAvatar.EventManager.OnRedLightOn
-  name: OnRedLightOn
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnRedLightOn
-  commentId: F:CustomAvatar.EventManager.OnRedLightOn
-  fullName: CustomAvatar.EventManager.OnRedLightOn
-  nameWithType: EventManager.OnRedLightOn
-- uid: CustomAvatar.EventManager.OnSlice
-  name: OnSlice
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnSlice
-  commentId: F:CustomAvatar.EventManager.OnSlice
-  fullName: CustomAvatar.EventManager.OnSlice
-  nameWithType: EventManager.OnSlice
-- uid: CustomAvatar.EventManager.SaberStartColliding
-  name: SaberStartColliding
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_SaberStartColliding
-  commentId: F:CustomAvatar.EventManager.SaberStartColliding
-  fullName: CustomAvatar.EventManager.SaberStartColliding
-  nameWithType: EventManager.SaberStartColliding
-- uid: CustomAvatar.EventManager.SaberStopColliding
-  name: SaberStopColliding
-  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_SaberStopColliding
-  commentId: F:CustomAvatar.EventManager.SaberStopColliding
-  fullName: CustomAvatar.EventManager.SaberStopColliding
-  nameWithType: EventManager.SaberStopColliding
+- uid: CustomAvatar.EventManager.comboBroken
+  name: comboBroken
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_comboBroken
+  commentId: P:CustomAvatar.EventManager.comboBroken
+  fullName: CustomAvatar.EventManager.comboBroken
+  nameWithType: EventManager.comboBroken
+- uid: CustomAvatar.EventManager.comboBroken*
+  name: comboBroken
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_comboBroken_
+  commentId: Overload:CustomAvatar.EventManager.comboBroken
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.comboBroken
+  nameWithType: EventManager.comboBroken
+- uid: CustomAvatar.EventManager.comboIncreased
+  name: comboIncreased
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_comboIncreased
+  commentId: P:CustomAvatar.EventManager.comboIncreased
+  fullName: CustomAvatar.EventManager.comboIncreased
+  nameWithType: EventManager.comboIncreased
+- uid: CustomAvatar.EventManager.comboIncreased*
+  name: comboIncreased
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_comboIncreased_
+  commentId: Overload:CustomAvatar.EventManager.comboIncreased
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.comboIncreased
+  nameWithType: EventManager.comboIncreased
+- uid: CustomAvatar.EventManager.IntUnityEvent
+  name: EventManager.IntUnityEvent
+  href: api/CustomAvatar.EventManager.IntUnityEvent.html
+  commentId: T:CustomAvatar.EventManager.IntUnityEvent
+  fullName: CustomAvatar.EventManager.IntUnityEvent
+  nameWithType: EventManager.IntUnityEvent
+- uid: CustomAvatar.EventManager.leftBadCut
+  name: leftBadCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftBadCut
+  commentId: P:CustomAvatar.EventManager.leftBadCut
+  fullName: CustomAvatar.EventManager.leftBadCut
+  nameWithType: EventManager.leftBadCut
+- uid: CustomAvatar.EventManager.leftBadCut*
+  name: leftBadCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftBadCut_
+  commentId: Overload:CustomAvatar.EventManager.leftBadCut
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.leftBadCut
+  nameWithType: EventManager.leftBadCut
+- uid: CustomAvatar.EventManager.leftGoodCut
+  name: leftGoodCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftGoodCut
+  commentId: P:CustomAvatar.EventManager.leftGoodCut
+  fullName: CustomAvatar.EventManager.leftGoodCut
+  nameWithType: EventManager.leftGoodCut
+- uid: CustomAvatar.EventManager.leftGoodCut*
+  name: leftGoodCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftGoodCut_
+  commentId: Overload:CustomAvatar.EventManager.leftGoodCut
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.leftGoodCut
+  nameWithType: EventManager.leftGoodCut
+- uid: CustomAvatar.EventManager.leftNoteMissed
+  name: leftNoteMissed
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftNoteMissed
+  commentId: P:CustomAvatar.EventManager.leftNoteMissed
+  fullName: CustomAvatar.EventManager.leftNoteMissed
+  nameWithType: EventManager.leftNoteMissed
+- uid: CustomAvatar.EventManager.leftNoteMissed*
+  name: leftNoteMissed
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftNoteMissed_
+  commentId: Overload:CustomAvatar.EventManager.leftNoteMissed
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.leftNoteMissed
+  nameWithType: EventManager.leftNoteMissed
+- uid: CustomAvatar.EventManager.leftSaberStartedColliding
+  name: leftSaberStartedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftSaberStartedColliding
+  commentId: P:CustomAvatar.EventManager.leftSaberStartedColliding
+  fullName: CustomAvatar.EventManager.leftSaberStartedColliding
+  nameWithType: EventManager.leftSaberStartedColliding
+- uid: CustomAvatar.EventManager.leftSaberStartedColliding*
+  name: leftSaberStartedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftSaberStartedColliding_
+  commentId: Overload:CustomAvatar.EventManager.leftSaberStartedColliding
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.leftSaberStartedColliding
+  nameWithType: EventManager.leftSaberStartedColliding
+- uid: CustomAvatar.EventManager.leftSaberStoppedColliding
+  name: leftSaberStoppedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftSaberStoppedColliding
+  commentId: P:CustomAvatar.EventManager.leftSaberStoppedColliding
+  fullName: CustomAvatar.EventManager.leftSaberStoppedColliding
+  nameWithType: EventManager.leftSaberStoppedColliding
+- uid: CustomAvatar.EventManager.leftSaberStoppedColliding*
+  name: leftSaberStoppedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_leftSaberStoppedColliding_
+  commentId: Overload:CustomAvatar.EventManager.leftSaberStoppedColliding
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.leftSaberStoppedColliding
+  nameWithType: EventManager.leftSaberStoppedColliding
+- uid: CustomAvatar.EventManager.levelFailed
+  name: levelFailed
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_levelFailed
+  commentId: P:CustomAvatar.EventManager.levelFailed
+  fullName: CustomAvatar.EventManager.levelFailed
+  nameWithType: EventManager.levelFailed
+- uid: CustomAvatar.EventManager.levelFailed*
+  name: levelFailed
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_levelFailed_
+  commentId: Overload:CustomAvatar.EventManager.levelFailed
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.levelFailed
+  nameWithType: EventManager.levelFailed
+- uid: CustomAvatar.EventManager.levelFinished
+  name: levelFinished
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_levelFinished
+  commentId: P:CustomAvatar.EventManager.levelFinished
+  fullName: CustomAvatar.EventManager.levelFinished
+  nameWithType: EventManager.levelFinished
+- uid: CustomAvatar.EventManager.levelFinished*
+  name: levelFinished
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_levelFinished_
+  commentId: Overload:CustomAvatar.EventManager.levelFinished
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.levelFinished
+  nameWithType: EventManager.levelFinished
+- uid: CustomAvatar.EventManager.levelStarted
+  name: levelStarted
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_levelStarted
+  commentId: P:CustomAvatar.EventManager.levelStarted
+  fullName: CustomAvatar.EventManager.levelStarted
+  nameWithType: EventManager.levelStarted
+- uid: CustomAvatar.EventManager.levelStarted*
+  name: levelStarted
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_levelStarted_
+  commentId: Overload:CustomAvatar.EventManager.levelStarted
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.levelStarted
+  nameWithType: EventManager.levelStarted
+- uid: CustomAvatar.EventManager.menuEntered
+  name: menuEntered
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_menuEntered
+  commentId: P:CustomAvatar.EventManager.menuEntered
+  fullName: CustomAvatar.EventManager.menuEntered
+  nameWithType: EventManager.menuEntered
+- uid: CustomAvatar.EventManager.menuEntered*
+  name: menuEntered
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_menuEntered_
+  commentId: Overload:CustomAvatar.EventManager.menuEntered
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.menuEntered
+  nameWithType: EventManager.menuEntered
+- uid: CustomAvatar.EventManager.multiplayerLobbyEntered
+  name: multiplayerLobbyEntered
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_multiplayerLobbyEntered
+  commentId: P:CustomAvatar.EventManager.multiplayerLobbyEntered
+  fullName: CustomAvatar.EventManager.multiplayerLobbyEntered
+  nameWithType: EventManager.multiplayerLobbyEntered
+- uid: CustomAvatar.EventManager.multiplayerLobbyEntered*
+  name: multiplayerLobbyEntered
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_multiplayerLobbyEntered_
+  commentId: Overload:CustomAvatar.EventManager.multiplayerLobbyEntered
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.multiplayerLobbyEntered
+  nameWithType: EventManager.multiplayerLobbyEntered
+- uid: CustomAvatar.EventManager.multiplierDecreased
+  name: multiplierDecreased
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_multiplierDecreased
+  commentId: P:CustomAvatar.EventManager.multiplierDecreased
+  fullName: CustomAvatar.EventManager.multiplierDecreased
+  nameWithType: EventManager.multiplierDecreased
+- uid: CustomAvatar.EventManager.multiplierDecreased*
+  name: multiplierDecreased
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_multiplierDecreased_
+  commentId: Overload:CustomAvatar.EventManager.multiplierDecreased
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.multiplierDecreased
+  nameWithType: EventManager.multiplierDecreased
+- uid: CustomAvatar.EventManager.multiplierIncreased
+  name: multiplierIncreased
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_multiplierIncreased
+  commentId: P:CustomAvatar.EventManager.multiplierIncreased
+  fullName: CustomAvatar.EventManager.multiplierIncreased
+  nameWithType: EventManager.multiplierIncreased
+- uid: CustomAvatar.EventManager.multiplierIncreased*
+  name: multiplierIncreased
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_multiplierIncreased_
+  commentId: Overload:CustomAvatar.EventManager.multiplierIncreased
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.multiplierIncreased
+  nameWithType: EventManager.multiplierIncreased
+- uid: CustomAvatar.EventManager.OnAfterDeserialize
+  name: OnAfterDeserialize()
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnAfterDeserialize
+  commentId: M:CustomAvatar.EventManager.OnAfterDeserialize
+  fullName: CustomAvatar.EventManager.OnAfterDeserialize()
+  nameWithType: EventManager.OnAfterDeserialize()
+- uid: CustomAvatar.EventManager.OnAfterDeserialize*
+  name: OnAfterDeserialize
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnAfterDeserialize_
+  commentId: Overload:CustomAvatar.EventManager.OnAfterDeserialize
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.OnAfterDeserialize
+  nameWithType: EventManager.OnAfterDeserialize
+- uid: CustomAvatar.EventManager.OnBeforeSerialize
+  name: OnBeforeSerialize()
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnBeforeSerialize
+  commentId: M:CustomAvatar.EventManager.OnBeforeSerialize
+  fullName: CustomAvatar.EventManager.OnBeforeSerialize()
+  nameWithType: EventManager.OnBeforeSerialize()
+- uid: CustomAvatar.EventManager.OnBeforeSerialize*
+  name: OnBeforeSerialize
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_OnBeforeSerialize_
+  commentId: Overload:CustomAvatar.EventManager.OnBeforeSerialize
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.OnBeforeSerialize
+  nameWithType: EventManager.OnBeforeSerialize
+- uid: CustomAvatar.EventManager.rightBadCut
+  name: rightBadCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightBadCut
+  commentId: P:CustomAvatar.EventManager.rightBadCut
+  fullName: CustomAvatar.EventManager.rightBadCut
+  nameWithType: EventManager.rightBadCut
+- uid: CustomAvatar.EventManager.rightBadCut*
+  name: rightBadCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightBadCut_
+  commentId: Overload:CustomAvatar.EventManager.rightBadCut
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.rightBadCut
+  nameWithType: EventManager.rightBadCut
+- uid: CustomAvatar.EventManager.rightGoodCut
+  name: rightGoodCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightGoodCut
+  commentId: P:CustomAvatar.EventManager.rightGoodCut
+  fullName: CustomAvatar.EventManager.rightGoodCut
+  nameWithType: EventManager.rightGoodCut
+- uid: CustomAvatar.EventManager.rightGoodCut*
+  name: rightGoodCut
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightGoodCut_
+  commentId: Overload:CustomAvatar.EventManager.rightGoodCut
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.rightGoodCut
+  nameWithType: EventManager.rightGoodCut
+- uid: CustomAvatar.EventManager.rightNoteMissed
+  name: rightNoteMissed
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightNoteMissed
+  commentId: P:CustomAvatar.EventManager.rightNoteMissed
+  fullName: CustomAvatar.EventManager.rightNoteMissed
+  nameWithType: EventManager.rightNoteMissed
+- uid: CustomAvatar.EventManager.rightNoteMissed*
+  name: rightNoteMissed
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightNoteMissed_
+  commentId: Overload:CustomAvatar.EventManager.rightNoteMissed
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.rightNoteMissed
+  nameWithType: EventManager.rightNoteMissed
+- uid: CustomAvatar.EventManager.rightSaberStartedColliding
+  name: rightSaberStartedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightSaberStartedColliding
+  commentId: P:CustomAvatar.EventManager.rightSaberStartedColliding
+  fullName: CustomAvatar.EventManager.rightSaberStartedColliding
+  nameWithType: EventManager.rightSaberStartedColliding
+- uid: CustomAvatar.EventManager.rightSaberStartedColliding*
+  name: rightSaberStartedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightSaberStartedColliding_
+  commentId: Overload:CustomAvatar.EventManager.rightSaberStartedColliding
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.rightSaberStartedColliding
+  nameWithType: EventManager.rightSaberStartedColliding
+- uid: CustomAvatar.EventManager.rightSaberStoppedColliding
+  name: rightSaberStoppedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightSaberStoppedColliding
+  commentId: P:CustomAvatar.EventManager.rightSaberStoppedColliding
+  fullName: CustomAvatar.EventManager.rightSaberStoppedColliding
+  nameWithType: EventManager.rightSaberStoppedColliding
+- uid: CustomAvatar.EventManager.rightSaberStoppedColliding*
+  name: rightSaberStoppedColliding
+  href: api/CustomAvatar.EventManager.html#CustomAvatar_EventManager_rightSaberStoppedColliding_
+  commentId: Overload:CustomAvatar.EventManager.rightSaberStoppedColliding
+  isSpec: "True"
+  fullName: CustomAvatar.EventManager.rightSaberStoppedColliding
+  nameWithType: EventManager.rightSaberStoppedColliding
 - uid: CustomAvatar.EveryNthComboFilter
   name: EveryNthComboFilter
   href: api/CustomAvatar.EveryNthComboFilter.html
@@ -957,6 +1148,18 @@ references:
   commentId: E:CustomAvatar.Player.PlayerAvatarManager.avatarLoadFailed
   fullName: CustomAvatar.Player.PlayerAvatarManager.avatarLoadFailed
   nameWithType: PlayerAvatarManager.avatarLoadFailed
+- uid: CustomAvatar.Player.PlayerAvatarManager.avatarLoading
+  name: avatarLoading
+  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_avatarLoading
+  commentId: E:CustomAvatar.Player.PlayerAvatarManager.avatarLoading
+  fullName: CustomAvatar.Player.PlayerAvatarManager.avatarLoading
+  nameWithType: PlayerAvatarManager.avatarLoading
+- uid: CustomAvatar.Player.PlayerAvatarManager.AvatarLoadingDelegate
+  name: PlayerAvatarManager.AvatarLoadingDelegate
+  href: api/CustomAvatar.Player.PlayerAvatarManager.AvatarLoadingDelegate.html
+  commentId: T:CustomAvatar.Player.PlayerAvatarManager.AvatarLoadingDelegate
+  fullName: CustomAvatar.Player.PlayerAvatarManager.AvatarLoadingDelegate
+  nameWithType: PlayerAvatarManager.AvatarLoadingDelegate
 - uid: CustomAvatar.Player.PlayerAvatarManager.avatarScaleChanged
   name: avatarScaleChanged
   href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_avatarScaleChanged
@@ -1045,12 +1248,15 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Player.PlayerAvatarManager.LoadAvatarFromSettingsAsync
   nameWithType: PlayerAvatarManager.LoadAvatarFromSettingsAsync
-- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync(System.String)
-  name: SwitchToAvatarAsync(String)
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToAvatarAsync_System_String_
-  commentId: M:CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync(System.String)
-  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync(System.String)
-  nameWithType: PlayerAvatarManager.SwitchToAvatarAsync(String)
+- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync(System.String,System.IProgress{System.Single})
+  name: SwitchToAvatarAsync(String, IProgress<Single>)
+  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToAvatarAsync_System_String_System_IProgress_System_Single__
+  commentId: M:CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync(System.String,System.IProgress{System.Single})
+  name.vb: SwitchToAvatarAsync(String, IProgress(Of Single))
+  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync(System.String, System.IProgress<System.Single>)
+  fullName.vb: CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync(System.String, System.IProgress(Of System.Single))
+  nameWithType: PlayerAvatarManager.SwitchToAvatarAsync(String, IProgress<Single>)
+  nameWithType.vb: PlayerAvatarManager.SwitchToAvatarAsync(String, IProgress(Of Single))
 - uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync*
   name: SwitchToAvatarAsync
   href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToAvatarAsync_
@@ -1058,32 +1264,32 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToAvatarAsync
   nameWithType: PlayerAvatarManager.SwitchToAvatarAsync
-- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatar
-  name: SwitchToNextAvatar()
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToNextAvatar
-  commentId: M:CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatar
-  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatar()
-  nameWithType: PlayerAvatarManager.SwitchToNextAvatar()
-- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatar*
-  name: SwitchToNextAvatar
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToNextAvatar_
-  commentId: Overload:CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatar
+- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatarAsync
+  name: SwitchToNextAvatarAsync()
+  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToNextAvatarAsync
+  commentId: M:CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatarAsync
+  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatarAsync()
+  nameWithType: PlayerAvatarManager.SwitchToNextAvatarAsync()
+- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatarAsync*
+  name: SwitchToNextAvatarAsync
+  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToNextAvatarAsync_
+  commentId: Overload:CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatarAsync
   isSpec: "True"
-  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatar
-  nameWithType: PlayerAvatarManager.SwitchToNextAvatar
-- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatar
-  name: SwitchToPreviousAvatar()
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToPreviousAvatar
-  commentId: M:CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatar
-  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatar()
-  nameWithType: PlayerAvatarManager.SwitchToPreviousAvatar()
-- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatar*
-  name: SwitchToPreviousAvatar
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToPreviousAvatar_
-  commentId: Overload:CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatar
+  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToNextAvatarAsync
+  nameWithType: PlayerAvatarManager.SwitchToNextAvatarAsync
+- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatarAsync
+  name: SwitchToPreviousAvatarAsync()
+  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToPreviousAvatarAsync
+  commentId: M:CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatarAsync
+  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatarAsync()
+  nameWithType: PlayerAvatarManager.SwitchToPreviousAvatarAsync()
+- uid: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatarAsync*
+  name: SwitchToPreviousAvatarAsync
+  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_SwitchToPreviousAvatarAsync_
+  commentId: Overload:CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatarAsync
   isSpec: "True"
-  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatar
-  nameWithType: PlayerAvatarManager.SwitchToPreviousAvatar
+  fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatarAsync
+  nameWithType: PlayerAvatarManager.SwitchToPreviousAvatarAsync
 - uid: CustomAvatar.Player.VRPlayerInput
   name: VRPlayerInput
   href: api/CustomAvatar.Player.VRPlayerInput.html
@@ -1135,12 +1341,6 @@ references:
   commentId: E:CustomAvatar.Player.VRPlayerInput.inputChanged
   fullName: CustomAvatar.Player.VRPlayerInput.inputChanged
   nameWithType: VRPlayerInput.inputChanged
-- uid: CustomAvatar.Player.VRPlayerInput.kDefaultPlayerArmSpan
-  name: kDefaultPlayerArmSpan
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_kDefaultPlayerArmSpan
-  commentId: F:CustomAvatar.Player.VRPlayerInput.kDefaultPlayerArmSpan
-  fullName: CustomAvatar.Player.VRPlayerInput.kDefaultPlayerArmSpan
-  nameWithType: VRPlayerInput.kDefaultPlayerArmSpan
 - uid: CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl(CustomAvatar.Tracking.DeviceUse,CustomAvatar.Tracking.FingerCurl@)
   name: TryGetFingerCurl(DeviceUse, out FingerCurl)
   href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_TryGetFingerCurl_CustomAvatar_Tracking_DeviceUse_CustomAvatar_Tracking_FingerCurl__
@@ -1185,6 +1385,19 @@ references:
   commentId: F:CustomAvatar.PoseManager.animator
   fullName: CustomAvatar.PoseManager.animator
   nameWithType: PoseManager.animator
+- uid: CustomAvatar.PoseManager.Awake
+  name: Awake()
+  href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_Awake
+  commentId: M:CustomAvatar.PoseManager.Awake
+  fullName: CustomAvatar.PoseManager.Awake()
+  nameWithType: PoseManager.Awake()
+- uid: CustomAvatar.PoseManager.Awake*
+  name: Awake
+  href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_Awake_
+  commentId: Overload:CustomAvatar.PoseManager.Awake
+  isSpec: "True"
+  fullName: CustomAvatar.PoseManager.Awake
+  nameWithType: PoseManager.Awake
 - uid: CustomAvatar.PoseManager.ClearClosedHandPoses
   name: ClearClosedHandPoses()
   href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_ClearClosedHandPoses
@@ -1430,19 +1643,6 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.PoseManager.isValid
   nameWithType: PoseManager.isValid
-- uid: CustomAvatar.PoseManager.OnEnable
-  name: OnEnable()
-  href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_OnEnable
-  commentId: M:CustomAvatar.PoseManager.OnEnable
-  fullName: CustomAvatar.PoseManager.OnEnable()
-  nameWithType: PoseManager.OnEnable()
-- uid: CustomAvatar.PoseManager.OnEnable*
-  name: OnEnable
-  href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_OnEnable_
-  commentId: Overload:CustomAvatar.PoseManager.OnEnable
-  isSpec: "True"
-  fullName: CustomAvatar.PoseManager.OnEnable
-  nameWithType: PoseManager.OnEnable
 - uid: CustomAvatar.PoseManager.openHand_LeftIndexDistal
   name: openHand_LeftIndexDistal
   href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_openHand_LeftIndexDistal
@@ -1636,6 +1836,19 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.PoseManager.openHandIsValid
   nameWithType: PoseManager.openHandIsValid
+- uid: CustomAvatar.PoseManager.Reset
+  name: Reset()
+  href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_Reset
+  commentId: M:CustomAvatar.PoseManager.Reset
+  fullName: CustomAvatar.PoseManager.Reset()
+  nameWithType: PoseManager.Reset()
+- uid: CustomAvatar.PoseManager.Reset*
+  name: Reset
+  href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_Reset_
+  commentId: Overload:CustomAvatar.PoseManager.Reset
+  isSpec: "True"
+  fullName: CustomAvatar.PoseManager.Reset
+  nameWithType: PoseManager.Reset
 - uid: CustomAvatar.PoseManager.SaveClosedHandPoses
   name: SaveClosedHandPoses()
   href: api/CustomAvatar.PoseManager.html#CustomAvatar_PoseManager_SaveClosedHandPoses
@@ -1662,6 +1875,61 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.PoseManager.SaveOpenHandPoses
   nameWithType: PoseManager.SaveOpenHandPoses
+- uid: CustomAvatar.Scripts
+  name: CustomAvatar.Scripts
+  href: api/CustomAvatar.Scripts.html
+  commentId: N:CustomAvatar.Scripts
+  fullName: CustomAvatar.Scripts
+  nameWithType: CustomAvatar.Scripts
+- uid: CustomAvatar.Scripts.UpperArmRelaxer
+  name: UpperArmRelaxer
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html
+  commentId: T:CustomAvatar.Scripts.UpperArmRelaxer
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer
+  nameWithType: UpperArmRelaxer
+- uid: CustomAvatar.Scripts.UpperArmRelaxer.children
+  name: children
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_children
+  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.children
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer.children
+  nameWithType: UpperArmRelaxer.children
+- uid: CustomAvatar.Scripts.UpperArmRelaxer.ik
+  name: ik
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_ik
+  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.ik
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer.ik
+  nameWithType: UpperArmRelaxer.ik
+- uid: CustomAvatar.Scripts.UpperArmRelaxer.parentChildCrossfade
+  name: parentChildCrossfade
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_parentChildCrossfade
+  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.parentChildCrossfade
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer.parentChildCrossfade
+  nameWithType: UpperArmRelaxer.parentChildCrossfade
+- uid: CustomAvatar.Scripts.UpperArmRelaxer.Relax
+  name: Relax()
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_Relax
+  commentId: M:CustomAvatar.Scripts.UpperArmRelaxer.Relax
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer.Relax()
+  nameWithType: UpperArmRelaxer.Relax()
+- uid: CustomAvatar.Scripts.UpperArmRelaxer.Relax*
+  name: Relax
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_Relax_
+  commentId: Overload:CustomAvatar.Scripts.UpperArmRelaxer.Relax
+  isSpec: "True"
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer.Relax
+  nameWithType: UpperArmRelaxer.Relax
+- uid: CustomAvatar.Scripts.UpperArmRelaxer.twistAngleOffset
+  name: twistAngleOffset
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_twistAngleOffset
+  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.twistAngleOffset
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer.twistAngleOffset
+  nameWithType: UpperArmRelaxer.twistAngleOffset
+- uid: CustomAvatar.Scripts.UpperArmRelaxer.weight
+  name: weight
+  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_weight
+  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.weight
+  fullName: CustomAvatar.Scripts.UpperArmRelaxer.weight
+  nameWithType: UpperArmRelaxer.weight
 - uid: CustomAvatar.Tracking
   name: CustomAvatar.Tracking
   href: api/CustomAvatar.Tracking.html
@@ -1822,6 +2090,147 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Tracking.IAvatarInput.TryGetPose
   nameWithType: IAvatarInput.TryGetPose
+- uid: CustomAvatar.UI
+  name: CustomAvatar.UI
+  href: api/CustomAvatar.UI.html
+  commentId: N:CustomAvatar.UI
+  fullName: CustomAvatar.UI
+  nameWithType: CustomAvatar.UI
+- uid: CustomAvatar.UI.IAvatarsMenuTab
+  name: IAvatarsMenuTab
+  href: api/CustomAvatar.UI.IAvatarsMenuTab.html
+  commentId: T:CustomAvatar.UI.IAvatarsMenuTab
+  fullName: CustomAvatar.UI.IAvatarsMenuTab
+  nameWithType: IAvatarsMenuTab
+- uid: CustomAvatar.UI.IAvatarsMenuTab.GetContent
+  name: GetContent()
+  href: api/CustomAvatar.UI.IAvatarsMenuTab.html#CustomAvatar_UI_IAvatarsMenuTab_GetContent
+  commentId: M:CustomAvatar.UI.IAvatarsMenuTab.GetContent
+  fullName: CustomAvatar.UI.IAvatarsMenuTab.GetContent()
+  nameWithType: IAvatarsMenuTab.GetContent()
+- uid: CustomAvatar.UI.IAvatarsMenuTab.GetContent*
+  name: GetContent
+  href: api/CustomAvatar.UI.IAvatarsMenuTab.html#CustomAvatar_UI_IAvatarsMenuTab_GetContent_
+  commentId: Overload:CustomAvatar.UI.IAvatarsMenuTab.GetContent
+  isSpec: "True"
+  fullName: CustomAvatar.UI.IAvatarsMenuTab.GetContent
+  nameWithType: IAvatarsMenuTab.GetContent
+- uid: CustomAvatar.UI.IAvatarsMenuTab.host
+  name: host
+  href: api/CustomAvatar.UI.IAvatarsMenuTab.html#CustomAvatar_UI_IAvatarsMenuTab_host
+  commentId: P:CustomAvatar.UI.IAvatarsMenuTab.host
+  fullName: CustomAvatar.UI.IAvatarsMenuTab.host
+  nameWithType: IAvatarsMenuTab.host
+- uid: CustomAvatar.UI.IAvatarsMenuTab.host*
+  name: host
+  href: api/CustomAvatar.UI.IAvatarsMenuTab.html#CustomAvatar_UI_IAvatarsMenuTab_host_
+  commentId: Overload:CustomAvatar.UI.IAvatarsMenuTab.host
+  isSpec: "True"
+  fullName: CustomAvatar.UI.IAvatarsMenuTab.host
+  nameWithType: IAvatarsMenuTab.host
+- uid: CustomAvatar.UI.IAvatarsMenuTab.name
+  name: name
+  href: api/CustomAvatar.UI.IAvatarsMenuTab.html#CustomAvatar_UI_IAvatarsMenuTab_name
+  commentId: P:CustomAvatar.UI.IAvatarsMenuTab.name
+  fullName: CustomAvatar.UI.IAvatarsMenuTab.name
+  nameWithType: IAvatarsMenuTab.name
+- uid: CustomAvatar.UI.IAvatarsMenuTab.name*
+  name: name
+  href: api/CustomAvatar.UI.IAvatarsMenuTab.html#CustomAvatar_UI_IAvatarsMenuTab_name_
+  commentId: Overload:CustomAvatar.UI.IAvatarsMenuTab.name
+  isSpec: "True"
+  fullName: CustomAvatar.UI.IAvatarsMenuTab.name
+  nameWithType: IAvatarsMenuTab.name
+- uid: CustomAvatar.UI.IViewControllerHost
+  name: IViewControllerHost
+  href: api/CustomAvatar.UI.IViewControllerHost.html
+  commentId: T:CustomAvatar.UI.IViewControllerHost
+  fullName: CustomAvatar.UI.IViewControllerHost
+  nameWithType: IViewControllerHost
+- uid: CustomAvatar.UI.IViewControllerHost.DidActivate(System.Boolean,System.Boolean,System.Boolean)
+  name: DidActivate(Boolean, Boolean, Boolean)
+  href: api/CustomAvatar.UI.IViewControllerHost.html#CustomAvatar_UI_IViewControllerHost_DidActivate_System_Boolean_System_Boolean_System_Boolean_
+  commentId: M:CustomAvatar.UI.IViewControllerHost.DidActivate(System.Boolean,System.Boolean,System.Boolean)
+  fullName: CustomAvatar.UI.IViewControllerHost.DidActivate(System.Boolean, System.Boolean, System.Boolean)
+  nameWithType: IViewControllerHost.DidActivate(Boolean, Boolean, Boolean)
+- uid: CustomAvatar.UI.IViewControllerHost.DidActivate*
+  name: DidActivate
+  href: api/CustomAvatar.UI.IViewControllerHost.html#CustomAvatar_UI_IViewControllerHost_DidActivate_
+  commentId: Overload:CustomAvatar.UI.IViewControllerHost.DidActivate
+  isSpec: "True"
+  fullName: CustomAvatar.UI.IViewControllerHost.DidActivate
+  nameWithType: IViewControllerHost.DidActivate
+- uid: CustomAvatar.UI.IViewControllerHost.DidDeactivate(System.Boolean,System.Boolean)
+  name: DidDeactivate(Boolean, Boolean)
+  href: api/CustomAvatar.UI.IViewControllerHost.html#CustomAvatar_UI_IViewControllerHost_DidDeactivate_System_Boolean_System_Boolean_
+  commentId: M:CustomAvatar.UI.IViewControllerHost.DidDeactivate(System.Boolean,System.Boolean)
+  fullName: CustomAvatar.UI.IViewControllerHost.DidDeactivate(System.Boolean, System.Boolean)
+  nameWithType: IViewControllerHost.DidDeactivate(Boolean, Boolean)
+- uid: CustomAvatar.UI.IViewControllerHost.DidDeactivate*
+  name: DidDeactivate
+  href: api/CustomAvatar.UI.IViewControllerHost.html#CustomAvatar_UI_IViewControllerHost_DidDeactivate_
+  commentId: Overload:CustomAvatar.UI.IViewControllerHost.DidDeactivate
+  isSpec: "True"
+  fullName: CustomAvatar.UI.IViewControllerHost.DidDeactivate
+  nameWithType: IViewControllerHost.DidDeactivate
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab
+  name: ResourceAvatarsMenuTab
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html
+  commentId: T:CustomAvatar.UI.ResourceAvatarsMenuTab
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab
+  nameWithType: ResourceAvatarsMenuTab
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.GetContent
+  name: GetContent()
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_GetContent
+  commentId: M:CustomAvatar.UI.ResourceAvatarsMenuTab.GetContent
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.GetContent()
+  nameWithType: ResourceAvatarsMenuTab.GetContent()
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.GetContent*
+  name: GetContent
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_GetContent_
+  commentId: Overload:CustomAvatar.UI.ResourceAvatarsMenuTab.GetContent
+  isSpec: "True"
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.GetContent
+  nameWithType: ResourceAvatarsMenuTab.GetContent
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.host
+  name: host
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_host
+  commentId: P:CustomAvatar.UI.ResourceAvatarsMenuTab.host
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.host
+  nameWithType: ResourceAvatarsMenuTab.host
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.host*
+  name: host
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_host_
+  commentId: Overload:CustomAvatar.UI.ResourceAvatarsMenuTab.host
+  isSpec: "True"
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.host
+  nameWithType: ResourceAvatarsMenuTab.host
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.name
+  name: name
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_name
+  commentId: P:CustomAvatar.UI.ResourceAvatarsMenuTab.name
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.name
+  nameWithType: ResourceAvatarsMenuTab.name
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.name*
+  name: name
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_name_
+  commentId: Overload:CustomAvatar.UI.ResourceAvatarsMenuTab.name
+  isSpec: "True"
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.name
+  nameWithType: ResourceAvatarsMenuTab.name
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.resourceName
+  name: resourceName
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_resourceName
+  commentId: P:CustomAvatar.UI.ResourceAvatarsMenuTab.resourceName
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.resourceName
+  nameWithType: ResourceAvatarsMenuTab.resourceName
+- uid: CustomAvatar.UI.ResourceAvatarsMenuTab.resourceName*
+  name: resourceName
+  href: api/CustomAvatar.UI.ResourceAvatarsMenuTab.html#CustomAvatar_UI_ResourceAvatarsMenuTab_resourceName_
+  commentId: Overload:CustomAvatar.UI.ResourceAvatarsMenuTab.resourceName
+  isSpec: "True"
+  fullName: CustomAvatar.UI.ResourceAvatarsMenuTab.resourceName
+  nameWithType: ResourceAvatarsMenuTab.resourceName
 - uid: CustomAvatar.VRIKManager
   name: VRIKManager
   href: api/CustomAvatar.VRIKManager.html
