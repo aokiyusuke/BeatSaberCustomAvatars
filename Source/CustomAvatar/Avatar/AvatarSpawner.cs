@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -40,7 +40,7 @@ namespace CustomAvatar.Avatar
             _container = container;
             _logger = logger;
 
-            RegisterComponent<AvatarTracking>();
+            RegisterComponent<AvatarTransformTracking>(ShouldAddTransformTracking);
             RegisterComponent<AvatarIK>(ShouldAddIK);
             RegisterComponent<AvatarFingerTracking>(ShouldAddFingerTracking);
         }
@@ -60,12 +60,6 @@ namespace CustomAvatar.Avatar
         public void DeregisterComponent<T>() where T : MonoBehaviour
         {
             _componentsToAdd.RemoveAll(vt => vt.type == typeof(T));
-        }
-
-        [Obsolete]
-        public SpawnedAvatar SpawnAvatar(LoadedAvatar avatar, IAvatarInput input, Transform parent = null)
-        {
-            return SpawnAvatar(avatar.prefab.GetComponent<AvatarPrefab>(), input, parent);
         }
 
         /// <summary>
@@ -96,22 +90,28 @@ namespace CustomAvatar.Avatar
             subContainer.Bind<AvatarPrefab>().FromInstance(avatar);
             subContainer.Bind<IAvatarInput>().FromInstance(input);
 
+            // SpawnedAvatar needs to be instantiated first since other behaviours depend on it
             SpawnedAvatar spawnedAvatar = subContainer.InstantiateComponent<SpawnedAvatar>(avatarInstance);
             subContainer.Bind<SpawnedAvatar>().FromInstance(spawnedAvatar);
-            subContainer.InjectGameObject(avatarInstance);
 
             foreach ((Type type, Func<AvatarPrefab, bool> condition) in _componentsToAdd)
             {
                 if (condition == null || condition(avatar))
                 {
                     _logger.LogInformation($"Adding component '{type.FullName}'");
-                    subContainer.InstantiateComponent(type, avatarInstance);
+                    avatarInstance.AddComponent(type);
                 }
             }
 
+            subContainer.InjectGameObject(avatarInstance);
             avatarInstance.SetActive(true);
 
             return spawnedAvatar;
+        }
+
+        private bool ShouldAddTransformTracking(AvatarPrefab avatarPrefab)
+        {
+            return avatarPrefab.head || avatarPrefab.leftHand || avatarPrefab.rightHand || avatarPrefab.pelvis || avatarPrefab.leftLeg || avatarPrefab.rightLeg;
         }
 
         private bool ShouldAddIK(AvatarPrefab avatar)

@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -14,13 +14,14 @@
 //  You should have received a copy of the GNU Lesser General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using CustomAvatar.Avatar;
-using CustomAvatar.Configuration;
-using CustomAvatar.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CustomAvatar.Avatar;
+using CustomAvatar.Configuration;
+using CustomAvatar.Utilities;
 using UnityEngine;
+using UnityEngine.XR;
 using Zenject;
 
 namespace CustomAvatar.Rendering
@@ -40,7 +41,7 @@ namespace CustomAvatar.Rendering
         private static readonly Rect kRightRect = new(0.5f, 0f, 0.5f, 1f);
         private static readonly Rect kFullRect = new(0f, 0f, 1f, 1f);
 
-        private ShaderLoader _shaderLoader;
+        private AssetLoader _assetLoader;
         private ActiveCameraManager _activeCameraManager;
         private Settings _settings;
 
@@ -65,14 +66,13 @@ namespace CustomAvatar.Rendering
             }
         }
 
-
         #region Behaviour Lifecycle
 #pragma warning disable IDE0051
 
         [Inject]
-        private void Inject(ShaderLoader shaderLoader, ActiveCameraManager activeCameraManager, Settings settings)
+        private void Inject(AssetLoader assetLoader, ActiveCameraManager activeCameraManager, Settings settings)
         {
-            _shaderLoader = shaderLoader;
+            _assetLoader = assetLoader;
             _activeCameraManager = activeCameraManager;
             _settings = settings;
         }
@@ -80,7 +80,7 @@ namespace CustomAvatar.Rendering
         private void Start()
         {
             _renderer = GetComponent<Renderer>();
-            _renderer.material = new Material(_shaderLoader.stereoMirrorShader);
+            _renderer.material = new Material(_assetLoader.stereoMirrorShader);
 
             CreateMirrorCamera();
         }
@@ -127,12 +127,6 @@ namespace CustomAvatar.Rendering
                 return Texture2D.blackTexture;
             }
 
-            // return immediately if we've already rendered for this frame
-            if (_renderTextures.TryGetValue(camera, out RenderTexture renderTexture))
-            {
-                return renderTexture;
-            }
-
             Transform cameraTransform = camera.transform;
             Vector3 cameraPosition = cameraTransform.position;
             Quaternion cameraRotation = cameraTransform.rotation;
@@ -144,13 +138,15 @@ namespace CustomAvatar.Rendering
                 return Texture2D.blackTexture;
             }
 
-            bool stereoEnabled = camera.stereoEnabled;
+            bool stereoEnabled = camera.stereoEnabled && XRSettings.stereoRenderingMode != XRSettings.StereoRenderingMode.MultiPass;
             int renderWidth = Mathf.RoundToInt(camera.pixelWidth * renderScale);
             int renderHeight = Mathf.RoundToInt(camera.pixelHeight * renderScale);
 
-            renderTexture = RenderTexture.GetTemporary(Mathf.Min(stereoEnabled ? renderWidth * 2 : renderWidth, SystemInfo.maxTextureSize), Mathf.Min(renderHeight, SystemInfo.maxTextureSize), 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default, _antiAliasing);
-
-            _renderTextures[camera] = renderTexture;
+            if (!_renderTextures.TryGetValue(camera, out RenderTexture renderTexture))
+            {
+                renderTexture = RenderTexture.GetTemporary(Mathf.Min(stereoEnabled ? renderWidth * 2 : renderWidth, SystemInfo.maxTextureSize), Mathf.Min(renderHeight, SystemInfo.maxTextureSize), 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Default, _antiAliasing);
+                _renderTextures[camera] = renderTexture;
+            }
 
             UpdateMirrorCamera(camera, renderTexture);
 
@@ -159,14 +155,12 @@ namespace CustomAvatar.Rendering
 
             if (stereoEnabled)
             {
-                Quaternion targetRotation = cameraRotation;
-
                 if (camera.stereoTargetEye is StereoTargetEyeMask.Both or StereoTargetEyeMask.Left)
                 {
                     Vector3 targetPosition = camera.ViewportToWorldPoint(Vector3.zero, Camera.MonoOrStereoscopicEye.Left);
                     Matrix4x4 stereoProjectionMatrix = camera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Left);
 
-                    RenderMirror(targetPosition, targetRotation, stereoProjectionMatrix, kLeftRect, reflectionPlanePosition, reflectionPlaneNormal);
+                    RenderMirror(targetPosition, cameraRotation, stereoProjectionMatrix, kLeftRect, reflectionPlanePosition, reflectionPlaneNormal);
                 }
 
                 if (camera.stereoTargetEye is StereoTargetEyeMask.Both or StereoTargetEyeMask.Right)
@@ -174,12 +168,13 @@ namespace CustomAvatar.Rendering
                     Vector3 targetPosition = camera.ViewportToWorldPoint(Vector3.zero, Camera.MonoOrStereoscopicEye.Right);
                     Matrix4x4 stereoProjectionMatrix = camera.GetStereoProjectionMatrix(Camera.StereoscopicEye.Right);
 
-                    RenderMirror(targetPosition, targetRotation, stereoProjectionMatrix, kRightRect, reflectionPlanePosition, reflectionPlaneNormal);
+                    RenderMirror(targetPosition, cameraRotation, stereoProjectionMatrix, kRightRect, reflectionPlanePosition, reflectionPlaneNormal);
                 }
             }
             else
             {
-                RenderMirror(cameraPosition, cameraRotation, camera.projectionMatrix, kFullRect, reflectionPlanePosition, reflectionPlaneNormal);
+                Vector3 targetPosition = camera.ViewportToWorldPoint(Vector3.zero, camera.stereoActiveEye);
+                RenderMirror(targetPosition, cameraRotation, camera.projectionMatrix, kFullRect, reflectionPlanePosition, reflectionPlaneNormal);
             }
 
             GL.invertCulling = invertCulling;

@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,7 @@ using Zenject;
 
 namespace CustomAvatar.Player
 {
+    [DisallowMultipleComponent]
     internal class EnvironmentObject : MonoBehaviour
     {
         private static readonly Dictionary<MirrorRendererSO, MirrorRendererSO> kReplacedMirrorRenderers = new();
@@ -47,7 +48,7 @@ namespace CustomAvatar.Player
 
             foreach (Renderer renderer in GetComponentsInChildren<Renderer>().Where(mr => mr.isPartOfStaticBatch))
             {
-                renderer.SetStaticBatchRootTransform(transform);
+                renderer.staticBatchRootTransform = transform;
             }
 
             _saberBurnMarkSparkles = GetComponentsInChildren<SaberBurnMarkSparkles>();
@@ -83,11 +84,6 @@ namespace CustomAvatar.Player
         protected virtual void UpdateOffset()
         {
             float floorOffset = playerAvatarManager.GetFloorOffset();
-
-            if (settings.moveFloorWithRoomAdjust)
-            {
-                floorOffset += beatSaberUtilities.roomCenter.y;
-            }
 
             transform.position = new Vector3(transform.position.x, _originalY + floorOffset, transform.position.z);
 

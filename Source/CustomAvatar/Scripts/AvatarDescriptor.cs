@@ -1,5 +1,5 @@
 //  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,7 @@
 
 using CustomAvatar.Logging;
 using UnityEngine;
+using System.Linq;
 
 #if UNITY_EDITOR
 using CustomAvatar.Utilities;
@@ -31,6 +32,7 @@ namespace CustomAvatar
     /// <summary>
     /// Container for an avatar's name and other information configured before exportation.
     /// </summary>
+    [DisallowMultipleComponent]
     public class AvatarDescriptor : MonoBehaviour, ISerializationCallbackReceiver
     {
         /// <summary>
@@ -44,18 +46,6 @@ namespace CustomAvatar
         /// </summary>
         [Tooltip("Avatar creator's name.")]
         public string author;
-
-        /// <summary>
-        /// Whether or not to allow height calibration for this avatar.
-        /// </summary>
-        [Tooltip("Whether or not to allow height calibration for this avatar.")]
-        public bool allowHeightCalibration = true;
-
-        /// <summary>
-        /// Whether or not this avatar supports automatic calibration. Note that this requires specific setup of the waist and feet trackers.
-        /// </summary>
-        [Tooltip("Whether or not this avatar supports automatic calibration. Note that this requires specific setup of the waist and feet trackers.")]
-        public bool supportsAutomaticCalibration = false;
 
         /// <summary>
         /// The image shown in the in-game avatars list.
@@ -80,20 +70,14 @@ namespace CustomAvatar
             name ??= Name ?? AvatarName;
             author ??= Author ?? AuthorName;
             cover = FirstNonNullUnityObject(cover, Cover, CoverImage);
+
+            Name = AvatarName = null;
+            Author = AuthorName = null;
+            Cover = CoverImage = null;
         }
 
-        private T FirstNonNullUnityObject<T>(params T[] objects) where T : Object
-        {
-            foreach (T obj in objects)
-            {
-                if (obj != null)
-                {
-                    return obj;
-                }
-            }
-
-            return null;
-        }
+        // Editor calls DoesObjectWithInstanceIDExist which doesn't exist at run time and blows up if not on the main thread, so just check the cached pointer.
+        private T FirstNonNullUnityObject<T>(params T[] objects) where T : Object => objects.FirstOrDefault(o => o is not null && o.GetCachedPtr() != System.IntPtr.Zero);
 
 #if UNITY_EDITOR
         private Mesh _saberMesh;
@@ -190,22 +174,6 @@ namespace CustomAvatar
             Gizmos.color = color;
             Gizmos.DrawMesh(mesh, transform.position, transform.rotation, Vector3.one);
             Gizmos.color = prev;
-        }
-#else
-        [Inject]
-        internal void Construct(ILoggerFactory loggerFactory)
-        {
-            ILogger<AvatarDescriptor> logger = loggerFactory.CreateLogger<AvatarDescriptor>(name);
-
-            if (!string.IsNullOrEmpty(AvatarName) ||
-                !string.IsNullOrEmpty(Name) ||
-                !string.IsNullOrEmpty(AuthorName) ||
-                !string.IsNullOrEmpty(Author) ||
-                CoverImage ||
-                Cover)
-            {
-                logger.LogWarning("Avatar is using a deprecated field; please re-export this avatar using the latest version of Custom Avatars");
-            }
         }
 #endif
     }

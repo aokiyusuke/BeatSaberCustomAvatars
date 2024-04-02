@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -26,14 +26,17 @@ using Zenject;
 
 namespace CustomAvatar.Rendering
 {
+    [DisallowMultipleComponent]
     internal class CustomAvatarsMainCameraController : MonoBehaviour
     {
         private ILogger<CustomAvatarsMainCameraController> _logger;
         private Settings _settings;
         private ActivePlayerSpaceManager _activePlayerSpaceManager;
+        private ActiveOriginManager _activeOriginManager;
         private ActiveCameraManager _activeCameraManager;
 
-        private Transform _parent;
+        private Transform _playerSpace;
+        private Transform _origin;
         private Camera _camera;
 
         private void Awake()
@@ -48,11 +51,12 @@ namespace CustomAvatar.Rendering
 
         [Inject]
         [SuppressMessage("CodeQuality", "IDE0051", Justification = "Used by Zenject")]
-        private void Construct(ILogger<CustomAvatarsMainCameraController> logger, Settings settings, ActivePlayerSpaceManager activePlayerSpaceManager, ActiveCameraManager activeCameraManager)
+        private void Construct(ILogger<CustomAvatarsMainCameraController> logger, Settings settings, ActivePlayerSpaceManager activePlayerSpaceManager, ActiveOriginManager activeOriginManager, ActiveCameraManager activeCameraManager)
         {
             _logger = logger;
             _settings = settings;
             _activePlayerSpaceManager = activePlayerSpaceManager;
+            _activeOriginManager = activeOriginManager;
             _activeCameraManager = activeCameraManager;
         }
 
@@ -109,21 +113,27 @@ namespace CustomAvatar.Rendering
 
         private void AddToPlayerSpaceManager()
         {
-            _parent = transform.parent;
+            VRCenterAdjust center = transform.GetComponentInParent<VRCenterAdjust>();
 
-            // this is simply to avoid the model flying around with the FPFC
-            if (_parent != null && Environment.GetCommandLineArgs().Contains("fpfc"))
+            if (center != null)
             {
-                _parent = _parent.parent;
+                _playerSpace = center.transform;
+                _origin = _playerSpace.parent;
+            }
+            else
+            {
+                _origin = _playerSpace = transform.parent;
             }
 
-            _activePlayerSpaceManager?.Add(_parent);
+            _activePlayerSpaceManager?.Add(_playerSpace);
+            _activeOriginManager?.Add(_origin);
             _activeCameraManager?.Add(_camera);
         }
 
         private void RemoveFromPlayerSpaceManager()
         {
-            _activePlayerSpaceManager?.Remove(_parent);
+            _activePlayerSpaceManager?.Remove(_playerSpace);
+            _activeOriginManager?.Remove(_origin);
             _activeCameraManager?.Remove(_camera);
         }
     }
