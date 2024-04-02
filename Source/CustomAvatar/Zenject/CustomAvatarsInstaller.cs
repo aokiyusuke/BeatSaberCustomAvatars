@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -29,6 +29,7 @@ using Hive.Versioning;
 using IPA.Loader;
 using SiraUtil.Affinity;
 using UnityEngine.XR;
+using Valve.VR;
 using Zenject;
 using Logger = IPA.Logging.Logger;
 
@@ -38,8 +39,8 @@ namespace CustomAvatar.Zenject
     {
         public static readonly int kPlayerAvatarManagerExecutionOrder = 1000;
 
-        private static readonly VersionRange kDynamicOpenVRVersionRange = new("^0.5.0");
-        private static readonly VersionRange kOpenXRHandsVersionRange = new("^1.1.0");
+        private static readonly VersionRange kXRHandsVersionRange = new("^1.1.0");
+        private static readonly VersionRange kOpenVRVersionRange = new("^2.0.0");
 
         private static readonly MethodInfo kCreateLoggerMethod = typeof(ILoggerFactory).GetMethod(nameof(ILoggerFactory.CreateLogger), BindingFlags.Public | BindingFlags.Instance);
         private static readonly Assembly kAssembly = Assembly.GetExecutingAssembly();
@@ -47,14 +48,12 @@ namespace CustomAvatar.Zenject
         private readonly Logger _ipaLogger;
         private readonly ILogger<CustomAvatarsInstaller> _logger;
         private readonly PluginMetadata _pluginMetadata;
-        private readonly PCAppInit _pcAppInit;
 
-        public CustomAvatarsInstaller(Logger ipaLogger, PluginMetadata pluginMetadata, PCAppInit pcAppInit)
+        public CustomAvatarsInstaller(Logger ipaLogger, PluginMetadata pluginMetadata)
         {
             _ipaLogger = ipaLogger;
             _logger = new IPALogger<CustomAvatarsInstaller>(ipaLogger);
             _pluginMetadata = pluginMetadata;
-            _pcAppInit = pcAppInit;
         }
 
         public override void InstallBindings()
@@ -71,27 +70,28 @@ namespace CustomAvatar.Zenject
 
             Container.Bind<SettingsManager>().FromInstance(settingsManager).AsSingle();
             Container.Bind<Settings>().FromMethod((ctx) => ctx.Container.Resolve<SettingsManager>().settings).AsTransient();
-            Container.Bind(typeof(CalibrationData), typeof(IDisposable)).To<CalibrationData>().AsSingle();
+            Container.Bind(typeof(CalibrationData), typeof(IInitializable), typeof(IDisposable)).To<CalibrationData>().AsSingle();
 
             _logger.LogInformation($"Current Unity XR device: '{XRSettings.loadedDeviceName}'");
 
-            if (ShouldUseOpenVR())
-            {
-                Container.Bind<OpenVRFacade>().AsTransient();
-                Container.Bind(typeof(IDeviceProvider), typeof(ITickable)).To<OpenVRDeviceProvider>().AsSingle();
-                Container.Bind(typeof(IFingerTrackingProvider), typeof(IInitializable), typeof(IDisposable)).To<OpenVRFingerTrackingProvider>().AsSingle();
-            }
-            else if (XRSettings.loadedDeviceName.IndexOf("OpenXR", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (XRSettings.loadedDeviceName.IndexOf("OpenXR", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 Container.Bind(typeof(IDeviceProvider), typeof(IInitializable), typeof(IDisposable)).To<UnityXRDeviceProvider>().AsSingle();
 
-                if (IsPluginLoadedAndMatchesVersion("Unity.XR.Hands", kOpenXRHandsVersionRange))
+                if (IsPluginLoadedAndMatchesVersion("Unity.XR.Hands", kXRHandsVersionRange))
                 {
                     Container.Bind(typeof(IFingerTrackingProvider), typeof(ITickable)).To<UnityXRFingerTrackingProvider>().AsSingle();
                 }
                 else
                 {
                     Container.Bind(typeof(IFingerTrackingProvider)).To<DevicelessFingerTrackingProvider>().AsSingle();
+                }
+
+                // SteamVR doesn't yet support render models through OpenXR so we need this workaround
+                if (OpenVRHelper.Initialize())
+                {
+                    Container.Bind(typeof(OpenVRRenderModelLoader), typeof(IDisposable)).To<OpenVRRenderModelLoader>().AsSingle();
+                    Container.Bind(typeof(IRenderModelProvider), typeof(IInitializable)).To<OpenVRRenderModelProvider>().AsSingle();
                 }
             }
             else
@@ -101,49 +101,26 @@ namespace CustomAvatar.Zenject
             }
 
             // managers
-            Container.Bind(typeof(PlayerAvatarManager), typeof(IInitializable), typeof(IDisposable)).To<PlayerAvatarManager>().AsSingle().NonLazy();
-            Container.Bind(typeof(ShaderLoader), typeof(IInitializable)).To<ShaderLoader>().AsSingle().NonLazy();
-
-            // this prevents a race condition when registering components in AvatarSpawner
-            Container.BindExecutionOrder<PlayerAvatarManager>(kPlayerAvatarManagerExecutionOrder);
+            Container.Bind<PlayerAvatarManager>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.Bind(typeof(AssetLoader), typeof(IInitializable), typeof(IDisposable)).To<AssetLoader>().AsSingle().NonLazy();
 
             Container.Bind<AvatarLoader>().AsSingle();
             Container.Bind<AvatarSpawner>().AsSingle();
             Container.Bind<ActiveCameraManager>().AsSingle();
             Container.Bind<ActivePlayerSpaceManager>().AsSingle();
-            Container.Bind(typeof(VRPlayerInput), typeof(IInitializable), typeof(IDisposable)).To<VRPlayerInput>().AsSingle();
-            Container.Bind(typeof(VRPlayerInputInternal), typeof(IInitializable), typeof(IDisposable)).To<VRPlayerInputInternal>().AsSingle();
+            Container.Bind<ActiveOriginManager>().AsSingle();
+            Container.Bind<VRControllerVisualsManager>().AsSingle();
+            Container.Bind(typeof(VRPlayerInput), typeof(IAvatarInput), typeof(IInitializable), typeof(IDisposable)).To<VRPlayerInput>().AsSingle();
             Container.Bind(typeof(IInitializable), typeof(IDisposable)).To<QualitySettingsController>().AsSingle();
             Container.Bind(typeof(BeatSaberUtilities), typeof(IInitializable), typeof(IDisposable)).To<BeatSaberUtilities>().AsSingle();
-
-#pragma warning disable CS0612
-            Container.Bind(typeof(FloorController), typeof(IInitializable), typeof(IDisposable)).To<FloorController>().AsSingle();
-#pragma warning restore CS0612
 
             // helper classes
             Container.Bind<MirrorHelper>().AsTransient();
             Container.Bind<IKHelper>().AsTransient();
-            Container.Bind<TrackingHelper>().AsTransient();
-
-            Container.Bind<MainSettingsModelSO>().FromInstance(_pcAppInit._mainSettingsModel).IfNotBound();
 
             Container.Bind(typeof(IAffinity)).To<Patches.MirrorRendererSO>().AsSingle();
-        }
 
-        private bool ShouldUseOpenVR()
-        {
-            if (XRSettings.loadedDeviceName.IndexOf("OpenVR", StringComparison.OrdinalIgnoreCase) == -1)
-            {
-                return false;
-            }
-
-            if (!IsPluginLoadedAndMatchesVersion("DynamicOpenVR", kDynamicOpenVRVersionRange))
-            {
-                _logger.LogError($"DynamicOpenVR is not installed or does not match expected version range '{kDynamicOpenVRVersionRange}'. OpenVR will not be used.");
-                return false;
-            }
-
-            return true;
+            Container.Bind<TrackingRig>().FromNewComponentOnNewGameObject().AsSingle();
         }
 
         private bool IsPluginLoadedAndMatchesVersion(string id, VersionRange versionRange)

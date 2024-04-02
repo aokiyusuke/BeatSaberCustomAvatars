@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -20,8 +20,6 @@ using CustomAvatar.Configuration;
 using CustomAvatar.Player;
 using CustomAvatar.Tracking;
 using CustomAvatar.Utilities;
-using UnityEngine;
-using UnityEngine.XR;
 
 namespace CustomAvatar.UI
 {
@@ -34,16 +32,16 @@ namespace CustomAvatar.UI
 
         #endregion
 
-        private readonly VRPlayerInputInternal _playerInput;
         private readonly Settings _settings;
+        private readonly TrackingRig _trackingRig;
         private readonly ArmSpanMeasurer _armSpanMeasurer;
 
         private float _armSpan;
 
-        internal GeneralSettingsHost(VRPlayerInputInternal playerInput, Settings settings, ArmSpanMeasurer armSpanMeasurer)
+        internal GeneralSettingsHost(Settings settings, TrackingRig trackingRig, ArmSpanMeasurer armSpanMeasurer)
         {
-            _playerInput = playerInput;
             _settings = settings;
+            _trackingRig = trackingRig;
             _armSpanMeasurer = armSpanMeasurer;
         }
 
@@ -73,6 +71,18 @@ namespace CustomAvatar.UI
             set
             {
                 _settings.showAvatarInMirrors = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool showRenderModelsOption => _trackingRig.areRenderModelsAvailable;
+
+        public bool showRenderModels
+        {
+            get => _settings.showRenderModels;
+            set
+            {
+                _settings.showRenderModels.value = value;
                 NotifyPropertyChanged();
             }
         }
@@ -127,7 +137,7 @@ namespace CustomAvatar.UI
             }
         }
 
-        public bool isMeasureButtonEnabled => _playerInput.TryGetUncalibratedPose(DeviceUse.LeftHand, out Pose _) && _playerInput.TryGetUncalibratedPose(DeviceUse.RightHand, out Pose _);
+        public bool isMeasureButtonEnabled => _trackingRig.areBothHandsTracking;
 
         public string measureButtonText => _armSpanMeasurer.isMeasuring ? "Cancel" : "Measure";
 
@@ -166,22 +176,26 @@ namespace CustomAvatar.UI
         {
             _armSpanMeasurer.updated += OnArmSpanMeasurementChanged;
             _armSpanMeasurer.completed += OnArmSpanMeasurementCompleted;
-            _playerInput.inputChanged += OnPlayerInputChanged;
+            _trackingRig.trackingChanged += OnTrackingChanged;
+            _settings.playerEyeHeight.changed += OnPlayerEyeHeightChanged;
 
             _armSpan = _settings.playerArmSpan;
             NotifyPropertyChanged(nameof(armSpan));
 
-            OnPlayerInputChanged();
+            OnTrackingChanged();
         }
 
         public override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
         {
             _armSpanMeasurer.updated -= OnArmSpanMeasurementChanged;
             _armSpanMeasurer.completed -= OnArmSpanMeasurementCompleted;
-            _playerInput.inputChanged -= OnPlayerInputChanged;
+            _trackingRig.trackingChanged -= OnTrackingChanged;
+            _settings.playerEyeHeight.changed -= OnPlayerEyeHeightChanged;
+
+            _trackingRig.EndCalibration();
         }
 
-        private void OnPlayerInputChanged()
+        private void OnTrackingChanged()
         {
             NotifyPropertyChanged(nameof(isMeasureButtonEnabled));
             NotifyPropertyChanged(nameof(measureButtonHoverHintText));
@@ -199,6 +213,11 @@ namespace CustomAvatar.UI
             this.armSpan = armSpan;
             NotifyPropertyChanged(nameof(isHeightAdjustInteractable));
             NotifyPropertyChanged(nameof(measureButtonText));
+        }
+
+        private void OnPlayerEyeHeightChanged(float eyeHeight)
+        {
+            NotifyPropertyChanged(nameof(height));
         }
 
         #region Actions
@@ -243,10 +262,7 @@ namespace CustomAvatar.UI
 
         private void OnMeasureHeightButtonClicked()
         {
-            if (InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 position))
-            {
-                this.height = Mathf.Round(position.y * 100) / 100;
-            }
+            this.height = _trackingRig.eyeHeight;
         }
 
         private string ArmSpanFormatter(float value)

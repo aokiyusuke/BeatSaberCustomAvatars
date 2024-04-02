@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,12 @@ using System.Collections;
 using CustomAvatar.Logging;
 using CustomAvatar.Player;
 using CustomAvatar.Utilities;
+using UnityEngine;
 using Zenject;
 
 namespace CustomAvatar.Avatar
 {
+    [DisallowMultipleComponent]
     internal class AvatarGameplayEventsPlayer : IInitializable, IDisposable
     {
         private readonly ILogger<AvatarGameplayEventsPlayer> _logger;
@@ -67,7 +69,7 @@ namespace CustomAvatar.Avatar
 
         public void Initialize()
         {
-            _eventManager = _avatarManager.currentlySpawnedAvatar ? _avatarManager.currentlySpawnedAvatar.GetComponent<EventManager>() : null;
+            _eventManager = _avatarManager.currentlySpawnedAvatar != null ? _avatarManager.currentlySpawnedAvatar.eventManager : null;
 
             if (_eventManager == null)
             {

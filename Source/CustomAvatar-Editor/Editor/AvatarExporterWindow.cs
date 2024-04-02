@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -93,27 +93,31 @@ namespace CustomAvatar.Editor
             string prefabPath = Path.Combine("Assets", "_CustomAvatar.prefab");
 
             PrefabUtility.SaveAsPrefabAsset(avatar.gameObject, prefabPath);
+            AssetBundleManifest manifest;
 
-            var assetBundleBuild = new AssetBundleBuild
+            try
             {
-                assetBundleName = destinationFileName,
-                assetNames = new[] { prefabPath }
-            };
+                var assetBundleBuild = new AssetBundleBuild
+                {
+                    assetBundleName = destinationFileName,
+                    assetNames = new[] { prefabPath }
+                };
 
-            assetBundleBuild.assetBundleName = destinationFileName;
+                BuildTargetGroup selectedBuildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+                BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
 
-            BuildTargetGroup selectedBuildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-            BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
+                manifest = BuildPipeline.BuildAssetBundles(tempFolder, new[] { assetBundleBuild }, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildTarget.StandaloneWindows64);
 
-            AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(tempFolder, new[] { assetBundleBuild }, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+                // switch back to what it was before creating the asset bundle
+                EditorUserBuildSettings.SwitchActiveBuildTarget(selectedBuildTargetGroup, activeBuildTarget);
+            }
+            finally
+            {
+                AssetDatabase.DeleteAsset(prefabPath);
+                AssetDatabase.Refresh();
+            }
 
-            // switch back to what it was before creating the asset bundle
-            EditorUserBuildSettings.SwitchActiveBuildTarget(selectedBuildTargetGroup, activeBuildTarget);
-
-            AssetDatabase.DeleteAsset(prefabPath);
-            AssetDatabase.Refresh();
-
-            if (!manifest)
+            if (manifest == null)
             {
                 EditorUtility.DisplayDialog("Export Failed", "Failed to create asset bundle! Please check the Unity console for more information.", "OK");
                 return;

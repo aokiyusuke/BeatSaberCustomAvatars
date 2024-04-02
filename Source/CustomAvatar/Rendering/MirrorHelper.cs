@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -25,18 +25,18 @@ namespace CustomAvatar.Rendering
     {
         private readonly ILogger<MirrorHelper> _logger;
         private readonly DiContainer _container;
-        private readonly ShaderLoader _shaderLoader;
+        private readonly AssetLoader _assetLoader;
 
-        public MirrorHelper(ILogger<MirrorHelper> logger, DiContainer container, ShaderLoader shaderLoader)
+        public MirrorHelper(ILogger<MirrorHelper> logger, DiContainer container, AssetLoader assetLoader)
         {
             _logger = logger;
             _container = container;
-            _shaderLoader = shaderLoader;
+            _assetLoader = assetLoader;
         }
 
         public StereoMirrorRenderer CreateMirror(Vector3 position, Quaternion rotation, Vector2 size, Transform container)
         {
-            if (!_shaderLoader.stereoMirrorShader)
+            if (!_assetLoader.stereoMirrorShader)
             {
                 _logger.LogError("Stereo Mirror shader not loaded; mirror will not be created");
                 return null;

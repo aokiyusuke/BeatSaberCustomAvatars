@@ -1,5 +1,5 @@
 ﻿//  Beat Saber Custom Avatars - Custom player models for body presence in Beat Saber.
-//  Copyright © 2018-2023  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
+//  Copyright © 2018-2024  Nicolas Gnyra and Beat Saber Custom Avatars Contributors
 //
 //  This library is free software: you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -16,14 +16,8 @@
 
 namespace CustomAvatar.Tracking
 {
-    public class FingerCurl
+    public readonly struct FingerCurl
     {
-        public float thumb;
-        public float index;
-        public float middle;
-        public float ring;
-        public float little;
-
         public FingerCurl(float thumb, float index, float middle, float ring, float little)
         {
             this.thumb = thumb;
@@ -32,5 +26,15 @@ namespace CustomAvatar.Tracking
             this.ring = ring;
             this.little = little;
         }
+
+        public float thumb { get; }
+
+        public float index { get; }
+
+        public float middle { get; }
+
+        public float ring { get; }
+
+        public float little { get; }
     }
 }
