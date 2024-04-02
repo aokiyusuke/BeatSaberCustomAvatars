@@ -25,19 +25,6 @@ references:
   commentId: T:CustomAvatar.Avatar.AvatarIK
   fullName: CustomAvatar.Avatar.AvatarIK
   nameWithType: AvatarIK
-- uid: CustomAvatar.Avatar.AvatarIK.isCalibrationModeEnabled
-  name: isCalibrationModeEnabled
-  href: api/CustomAvatar.Avatar.AvatarIK.html#CustomAvatar_Avatar_AvatarIK_isCalibrationModeEnabled
-  commentId: P:CustomAvatar.Avatar.AvatarIK.isCalibrationModeEnabled
-  fullName: CustomAvatar.Avatar.AvatarIK.isCalibrationModeEnabled
-  nameWithType: AvatarIK.isCalibrationModeEnabled
-- uid: CustomAvatar.Avatar.AvatarIK.isCalibrationModeEnabled*
-  name: isCalibrationModeEnabled
-  href: api/CustomAvatar.Avatar.AvatarIK.html#CustomAvatar_Avatar_AvatarIK_isCalibrationModeEnabled_
-  commentId: Overload:CustomAvatar.Avatar.AvatarIK.isCalibrationModeEnabled
-  isSpec: "True"
-  fullName: CustomAvatar.Avatar.AvatarIK.isCalibrationModeEnabled
-  nameWithType: AvatarIK.isCalibrationModeEnabled
 - uid: CustomAvatar.Avatar.AvatarIK.isLocomotionEnabled
   name: isLocomotionEnabled
   href: api/CustomAvatar.Avatar.AvatarIK.html#CustomAvatar_Avatar_AvatarIK_isLocomotionEnabled
@@ -272,12 +259,6 @@ references:
   commentId: M:CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar(CustomAvatar.Avatar.AvatarPrefab,CustomAvatar.Tracking.IAvatarInput,Transform)
   fullName: CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar(CustomAvatar.Avatar.AvatarPrefab, CustomAvatar.Tracking.IAvatarInput, Transform)
   nameWithType: AvatarSpawner.SpawnAvatar(AvatarPrefab, IAvatarInput, Transform)
-- uid: CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar(CustomAvatar.Avatar.LoadedAvatar,CustomAvatar.Tracking.IAvatarInput,Transform)
-  name: SpawnAvatar(LoadedAvatar, IAvatarInput, Transform)
-  href: api/CustomAvatar.Avatar.AvatarSpawner.html#CustomAvatar_Avatar_AvatarSpawner_SpawnAvatar_CustomAvatar_Avatar_LoadedAvatar_CustomAvatar_Tracking_IAvatarInput_Transform_
-  commentId: M:CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar(CustomAvatar.Avatar.LoadedAvatar,CustomAvatar.Tracking.IAvatarInput,Transform)
-  fullName: CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar(CustomAvatar.Avatar.LoadedAvatar, CustomAvatar.Tracking.IAvatarInput, Transform)
-  nameWithType: AvatarSpawner.SpawnAvatar(LoadedAvatar, IAvatarInput, Transform)
 - uid: CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar*
   name: SpawnAvatar
   href: api/CustomAvatar.Avatar.AvatarSpawner.html#CustomAvatar_Avatar_AvatarSpawner_SpawnAvatar_
@@ -285,25 +266,6 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Avatar.AvatarSpawner.SpawnAvatar
   nameWithType: AvatarSpawner.SpawnAvatar
-- uid: CustomAvatar.Avatar.AvatarTracking
-  name: AvatarTracking
-  href: api/CustomAvatar.Avatar.AvatarTracking.html
-  commentId: T:CustomAvatar.Avatar.AvatarTracking
-  fullName: CustomAvatar.Avatar.AvatarTracking
-  nameWithType: AvatarTracking
-- uid: CustomAvatar.Avatar.AvatarTracking.isCalibrationModeEnabled
-  name: isCalibrationModeEnabled
-  href: api/CustomAvatar.Avatar.AvatarTracking.html#CustomAvatar_Avatar_AvatarTracking_isCalibrationModeEnabled
-  commentId: P:CustomAvatar.Avatar.AvatarTracking.isCalibrationModeEnabled
-  fullName: CustomAvatar.Avatar.AvatarTracking.isCalibrationModeEnabled
-  nameWithType: AvatarTracking.isCalibrationModeEnabled
-- uid: CustomAvatar.Avatar.AvatarTracking.isCalibrationModeEnabled*
-  name: isCalibrationModeEnabled
-  href: api/CustomAvatar.Avatar.AvatarTracking.html#CustomAvatar_Avatar_AvatarTracking_isCalibrationModeEnabled_
-  commentId: Overload:CustomAvatar.Avatar.AvatarTracking.isCalibrationModeEnabled
-  isSpec: "True"
-  fullName: CustomAvatar.Avatar.AvatarTracking.isCalibrationModeEnabled
-  nameWithType: AvatarTracking.isCalibrationModeEnabled
 - uid: CustomAvatar.Avatar.FirstPersonVisibility
   name: FirstPersonVisibility
   href: api/CustomAvatar.Avatar.FirstPersonVisibility.html
@@ -328,98 +290,25 @@ references:
   commentId: F:CustomAvatar.Avatar.FirstPersonVisibility.VisibleWithExclusionsApplied
   fullName: CustomAvatar.Avatar.FirstPersonVisibility.VisibleWithExclusionsApplied
   nameWithType: FirstPersonVisibility.VisibleWithExclusionsApplied
-- uid: CustomAvatar.Avatar.LoadedAvatar
-  name: LoadedAvatar
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html
-  commentId: T:CustomAvatar.Avatar.LoadedAvatar
-  fullName: CustomAvatar.Avatar.LoadedAvatar
-  nameWithType: LoadedAvatar
-- uid: CustomAvatar.Avatar.LoadedAvatar.armSpan
-  name: armSpan
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_armSpan
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.armSpan
-  fullName: CustomAvatar.Avatar.LoadedAvatar.armSpan
-  nameWithType: LoadedAvatar.armSpan
-- uid: CustomAvatar.Avatar.LoadedAvatar.descriptor
-  name: descriptor
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_descriptor
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.descriptor
-  fullName: CustomAvatar.Avatar.LoadedAvatar.descriptor
-  nameWithType: LoadedAvatar.descriptor
-- uid: CustomAvatar.Avatar.LoadedAvatar.Dispose
-  name: Dispose()
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_Dispose
-  commentId: M:CustomAvatar.Avatar.LoadedAvatar.Dispose
-  fullName: CustomAvatar.Avatar.LoadedAvatar.Dispose()
-  nameWithType: LoadedAvatar.Dispose()
-- uid: CustomAvatar.Avatar.LoadedAvatar.Dispose*
-  name: Dispose
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_Dispose_
-  commentId: Overload:CustomAvatar.Avatar.LoadedAvatar.Dispose
-  isSpec: "True"
-  fullName: CustomAvatar.Avatar.LoadedAvatar.Dispose
-  nameWithType: LoadedAvatar.Dispose
-- uid: CustomAvatar.Avatar.LoadedAvatar.eyeHeight
-  name: eyeHeight
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_eyeHeight
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.eyeHeight
-  fullName: CustomAvatar.Avatar.LoadedAvatar.eyeHeight
-  nameWithType: LoadedAvatar.eyeHeight
-- uid: CustomAvatar.Avatar.LoadedAvatar.fileName
-  name: fileName
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_fileName
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.fileName
-  fullName: CustomAvatar.Avatar.LoadedAvatar.fileName
-  nameWithType: LoadedAvatar.fileName
-- uid: CustomAvatar.Avatar.LoadedAvatar.fullPath
-  name: fullPath
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_fullPath
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.fullPath
-  fullName: CustomAvatar.Avatar.LoadedAvatar.fullPath
-  nameWithType: LoadedAvatar.fullPath
-- uid: CustomAvatar.Avatar.LoadedAvatar.isIKAvatar
-  name: isIKAvatar
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_isIKAvatar
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.isIKAvatar
-  fullName: CustomAvatar.Avatar.LoadedAvatar.isIKAvatar
-  nameWithType: LoadedAvatar.isIKAvatar
-- uid: CustomAvatar.Avatar.LoadedAvatar.prefab
-  name: prefab
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_prefab
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.prefab
-  fullName: CustomAvatar.Avatar.LoadedAvatar.prefab
-  nameWithType: LoadedAvatar.prefab
-- uid: CustomAvatar.Avatar.LoadedAvatar.supportsFingerTracking
-  name: supportsFingerTracking
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_supportsFingerTracking
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.supportsFingerTracking
-  fullName: CustomAvatar.Avatar.LoadedAvatar.supportsFingerTracking
-  nameWithType: LoadedAvatar.supportsFingerTracking
-- uid: CustomAvatar.Avatar.LoadedAvatar.supportsFullBodyTracking
-  name: supportsFullBodyTracking
-  href: api/CustomAvatar.Avatar.LoadedAvatar.html#CustomAvatar_Avatar_LoadedAvatar_supportsFullBodyTracking
-  commentId: F:CustomAvatar.Avatar.LoadedAvatar.supportsFullBodyTracking
-  fullName: CustomAvatar.Avatar.LoadedAvatar.supportsFullBodyTracking
-  nameWithType: LoadedAvatar.supportsFullBodyTracking
 - uid: CustomAvatar.Avatar.SpawnedAvatar
   name: SpawnedAvatar
   href: api/CustomAvatar.Avatar.SpawnedAvatar.html
   commentId: T:CustomAvatar.Avatar.SpawnedAvatar
   fullName: CustomAvatar.Avatar.SpawnedAvatar
   nameWithType: SpawnedAvatar
-- uid: CustomAvatar.Avatar.SpawnedAvatar.avatar
-  name: avatar
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_avatar
-  commentId: P:CustomAvatar.Avatar.SpawnedAvatar.avatar
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.avatar
-  nameWithType: SpawnedAvatar.avatar
-- uid: CustomAvatar.Avatar.SpawnedAvatar.avatar*
-  name: avatar
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_avatar_
-  commentId: Overload:CustomAvatar.Avatar.SpawnedAvatar.avatar
+- uid: CustomAvatar.Avatar.SpawnedAvatar.absoluteScale
+  name: absoluteScale
+  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_absoluteScale
+  commentId: P:CustomAvatar.Avatar.SpawnedAvatar.absoluteScale
+  fullName: CustomAvatar.Avatar.SpawnedAvatar.absoluteScale
+  nameWithType: SpawnedAvatar.absoluteScale
+- uid: CustomAvatar.Avatar.SpawnedAvatar.absoluteScale*
+  name: absoluteScale
+  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_absoluteScale_
+  commentId: Overload:CustomAvatar.Avatar.SpawnedAvatar.absoluteScale
   isSpec: "True"
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.avatar
-  nameWithType: SpawnedAvatar.avatar
+  fullName: CustomAvatar.Avatar.SpawnedAvatar.absoluteScale
+  nameWithType: SpawnedAvatar.absoluteScale
 - uid: CustomAvatar.Avatar.SpawnedAvatar.body
   name: body
   href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_body
@@ -433,32 +322,6 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Avatar.SpawnedAvatar.body
   nameWithType: SpawnedAvatar.body
-- uid: CustomAvatar.Avatar.SpawnedAvatar.DisableCalibrationMode
-  name: DisableCalibrationMode()
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_DisableCalibrationMode
-  commentId: M:CustomAvatar.Avatar.SpawnedAvatar.DisableCalibrationMode
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.DisableCalibrationMode()
-  nameWithType: SpawnedAvatar.DisableCalibrationMode()
-- uid: CustomAvatar.Avatar.SpawnedAvatar.DisableCalibrationMode*
-  name: DisableCalibrationMode
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_DisableCalibrationMode_
-  commentId: Overload:CustomAvatar.Avatar.SpawnedAvatar.DisableCalibrationMode
-  isSpec: "True"
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.DisableCalibrationMode
-  nameWithType: SpawnedAvatar.DisableCalibrationMode
-- uid: CustomAvatar.Avatar.SpawnedAvatar.EnableCalibrationMode
-  name: EnableCalibrationMode()
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_EnableCalibrationMode
-  commentId: M:CustomAvatar.Avatar.SpawnedAvatar.EnableCalibrationMode
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.EnableCalibrationMode()
-  nameWithType: SpawnedAvatar.EnableCalibrationMode()
-- uid: CustomAvatar.Avatar.SpawnedAvatar.EnableCalibrationMode*
-  name: EnableCalibrationMode
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_EnableCalibrationMode_
-  commentId: Overload:CustomAvatar.Avatar.SpawnedAvatar.EnableCalibrationMode
-  isSpec: "True"
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.EnableCalibrationMode
-  nameWithType: SpawnedAvatar.EnableCalibrationMode
 - uid: CustomAvatar.Avatar.SpawnedAvatar.head
   name: head
   href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_head
@@ -602,31 +465,12 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Avatar.SpawnedAvatar.SetFirstPersonVisibility
   nameWithType: SpawnedAvatar.SetFirstPersonVisibility
-- uid: CustomAvatar.Avatar.SpawnedAvatar.SetLocomotionEnabled(System.Boolean)
-  name: SetLocomotionEnabled(Boolean)
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_SetLocomotionEnabled_System_Boolean_
-  commentId: M:CustomAvatar.Avatar.SpawnedAvatar.SetLocomotionEnabled(System.Boolean)
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.SetLocomotionEnabled(System.Boolean)
-  nameWithType: SpawnedAvatar.SetLocomotionEnabled(Boolean)
-- uid: CustomAvatar.Avatar.SpawnedAvatar.SetLocomotionEnabled*
-  name: SetLocomotionEnabled
-  href: api/CustomAvatar.Avatar.SpawnedAvatar.html#CustomAvatar_Avatar_SpawnedAvatar_SetLocomotionEnabled_
-  commentId: Overload:CustomAvatar.Avatar.SpawnedAvatar.SetLocomotionEnabled
-  isSpec: "True"
-  fullName: CustomAvatar.Avatar.SpawnedAvatar.SetLocomotionEnabled
-  nameWithType: SpawnedAvatar.SetLocomotionEnabled
 - uid: CustomAvatar.AvatarDescriptor
   name: AvatarDescriptor
   href: api/CustomAvatar.AvatarDescriptor.html
   commentId: T:CustomAvatar.AvatarDescriptor
   fullName: CustomAvatar.AvatarDescriptor
   nameWithType: AvatarDescriptor
-- uid: CustomAvatar.AvatarDescriptor.allowHeightCalibration
-  name: allowHeightCalibration
-  href: api/CustomAvatar.AvatarDescriptor.html#CustomAvatar_AvatarDescriptor_allowHeightCalibration
-  commentId: F:CustomAvatar.AvatarDescriptor.allowHeightCalibration
-  fullName: CustomAvatar.AvatarDescriptor.allowHeightCalibration
-  nameWithType: AvatarDescriptor.allowHeightCalibration
 - uid: CustomAvatar.AvatarDescriptor.author
   name: author
   href: api/CustomAvatar.AvatarDescriptor.html#CustomAvatar_AvatarDescriptor_author
@@ -671,12 +515,6 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.AvatarDescriptor.OnBeforeSerialize
   nameWithType: AvatarDescriptor.OnBeforeSerialize
-- uid: CustomAvatar.AvatarDescriptor.supportsAutomaticCalibration
-  name: supportsAutomaticCalibration
-  href: api/CustomAvatar.AvatarDescriptor.html#CustomAvatar_AvatarDescriptor_supportsAutomaticCalibration
-  commentId: F:CustomAvatar.AvatarDescriptor.supportsAutomaticCalibration
-  fullName: CustomAvatar.AvatarDescriptor.supportsAutomaticCalibration
-  nameWithType: AvatarDescriptor.supportsAutomaticCalibration
 - uid: CustomAvatar.ComboReachedEvent
   name: ComboReachedEvent
   href: api/CustomAvatar.ComboReachedEvent.html
@@ -695,6 +533,36 @@ references:
   commentId: F:CustomAvatar.ComboReachedEvent.ComboTarget
   fullName: CustomAvatar.ComboReachedEvent.ComboTarget
   nameWithType: ComboReachedEvent.ComboTarget
+- uid: CustomAvatar.Configuration
+  name: CustomAvatar.Configuration
+  href: api/CustomAvatar.Configuration.html
+  commentId: N:CustomAvatar.Configuration
+  fullName: CustomAvatar.Configuration
+  nameWithType: CustomAvatar.Configuration
+- uid: CustomAvatar.Configuration.CalibrationMode
+  name: CalibrationMode
+  href: api/CustomAvatar.Configuration.CalibrationMode.html
+  commentId: T:CustomAvatar.Configuration.CalibrationMode
+  fullName: CustomAvatar.Configuration.CalibrationMode
+  nameWithType: CalibrationMode
+- uid: CustomAvatar.Configuration.CalibrationMode.Automatic
+  name: Automatic
+  href: api/CustomAvatar.Configuration.CalibrationMode.html#CustomAvatar_Configuration_CalibrationMode_Automatic
+  commentId: F:CustomAvatar.Configuration.CalibrationMode.Automatic
+  fullName: CustomAvatar.Configuration.CalibrationMode.Automatic
+  nameWithType: CalibrationMode.Automatic
+- uid: CustomAvatar.Configuration.CalibrationMode.Manual
+  name: Manual
+  href: api/CustomAvatar.Configuration.CalibrationMode.html#CustomAvatar_Configuration_CalibrationMode_Manual
+  commentId: F:CustomAvatar.Configuration.CalibrationMode.Manual
+  fullName: CustomAvatar.Configuration.CalibrationMode.Manual
+  nameWithType: CalibrationMode.Manual
+- uid: CustomAvatar.Configuration.CalibrationMode.None
+  name: None
+  href: api/CustomAvatar.Configuration.CalibrationMode.html#CustomAvatar_Configuration_CalibrationMode_None
+  commentId: F:CustomAvatar.Configuration.CalibrationMode.None
+  fullName: CustomAvatar.Configuration.CalibrationMode.None
+  nameWithType: CalibrationMode.None
 - uid: CustomAvatar.EventFilterBehaviour
   name: EventFilterBehaviour
   href: api/CustomAvatar.EventFilterBehaviour.html
@@ -1066,70 +934,6 @@ references:
   commentId: N:CustomAvatar.Player
   fullName: CustomAvatar.Player
   nameWithType: CustomAvatar.Player
-- uid: CustomAvatar.Player.FloorController
-  name: FloorController
-  href: api/CustomAvatar.Player.FloorController.html
-  commentId: T:CustomAvatar.Player.FloorController
-  fullName: CustomAvatar.Player.FloorController
-  nameWithType: FloorController
-- uid: CustomAvatar.Player.FloorController.Dispose
-  name: Dispose()
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_Dispose
-  commentId: M:CustomAvatar.Player.FloorController.Dispose
-  fullName: CustomAvatar.Player.FloorController.Dispose()
-  nameWithType: FloorController.Dispose()
-- uid: CustomAvatar.Player.FloorController.Dispose*
-  name: Dispose
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_Dispose_
-  commentId: Overload:CustomAvatar.Player.FloorController.Dispose
-  isSpec: "True"
-  fullName: CustomAvatar.Player.FloorController.Dispose
-  nameWithType: FloorController.Dispose
-- uid: CustomAvatar.Player.FloorController.floorOffset
-  name: floorOffset
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_floorOffset
-  commentId: P:CustomAvatar.Player.FloorController.floorOffset
-  fullName: CustomAvatar.Player.FloorController.floorOffset
-  nameWithType: FloorController.floorOffset
-- uid: CustomAvatar.Player.FloorController.floorOffset*
-  name: floorOffset
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_floorOffset_
-  commentId: Overload:CustomAvatar.Player.FloorController.floorOffset
-  isSpec: "True"
-  fullName: CustomAvatar.Player.FloorController.floorOffset
-  nameWithType: FloorController.floorOffset
-- uid: CustomAvatar.Player.FloorController.floorPosition
-  name: floorPosition
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_floorPosition
-  commentId: P:CustomAvatar.Player.FloorController.floorPosition
-  fullName: CustomAvatar.Player.FloorController.floorPosition
-  nameWithType: FloorController.floorPosition
-- uid: CustomAvatar.Player.FloorController.floorPosition*
-  name: floorPosition
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_floorPosition_
-  commentId: Overload:CustomAvatar.Player.FloorController.floorPosition
-  isSpec: "True"
-  fullName: CustomAvatar.Player.FloorController.floorPosition
-  nameWithType: FloorController.floorPosition
-- uid: CustomAvatar.Player.FloorController.floorPositionChanged
-  name: floorPositionChanged
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_floorPositionChanged
-  commentId: E:CustomAvatar.Player.FloorController.floorPositionChanged
-  fullName: CustomAvatar.Player.FloorController.floorPositionChanged
-  nameWithType: FloorController.floorPositionChanged
-- uid: CustomAvatar.Player.FloorController.Initialize
-  name: Initialize()
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_Initialize
-  commentId: M:CustomAvatar.Player.FloorController.Initialize
-  fullName: CustomAvatar.Player.FloorController.Initialize()
-  nameWithType: FloorController.Initialize()
-- uid: CustomAvatar.Player.FloorController.Initialize*
-  name: Initialize
-  href: api/CustomAvatar.Player.FloorController.html#CustomAvatar_Player_FloorController_Initialize_
-  commentId: Overload:CustomAvatar.Player.FloorController.Initialize
-  isSpec: "True"
-  fullName: CustomAvatar.Player.FloorController.Initialize
-  nameWithType: FloorController.Initialize
 - uid: CustomAvatar.Player.PlayerAvatarManager
   name: PlayerAvatarManager
   href: api/CustomAvatar.Player.PlayerAvatarManager.html
@@ -1166,12 +970,6 @@ references:
   commentId: E:CustomAvatar.Player.PlayerAvatarManager.avatarScaleChanged
   fullName: CustomAvatar.Player.PlayerAvatarManager.avatarScaleChanged
   nameWithType: PlayerAvatarManager.avatarScaleChanged
-- uid: CustomAvatar.Player.PlayerAvatarManager.avatarStartedLoading
-  name: avatarStartedLoading
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_avatarStartedLoading
-  commentId: E:CustomAvatar.Player.PlayerAvatarManager.avatarStartedLoading
-  fullName: CustomAvatar.Player.PlayerAvatarManager.avatarStartedLoading
-  nameWithType: PlayerAvatarManager.avatarStartedLoading
 - uid: CustomAvatar.Player.PlayerAvatarManager.currentlySpawnedAvatar
   name: currentlySpawnedAvatar
   href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_currentlySpawnedAvatar
@@ -1185,50 +983,6 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Player.PlayerAvatarManager.currentlySpawnedAvatar
   nameWithType: PlayerAvatarManager.currentlySpawnedAvatar
-- uid: CustomAvatar.Player.PlayerAvatarManager.Dispose
-  name: Dispose()
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_Dispose
-  commentId: M:CustomAvatar.Player.PlayerAvatarManager.Dispose
-  fullName: CustomAvatar.Player.PlayerAvatarManager.Dispose()
-  nameWithType: PlayerAvatarManager.Dispose()
-- uid: CustomAvatar.Player.PlayerAvatarManager.Dispose*
-  name: Dispose
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_Dispose_
-  commentId: Overload:CustomAvatar.Player.PlayerAvatarManager.Dispose
-  isSpec: "True"
-  fullName: CustomAvatar.Player.PlayerAvatarManager.Dispose
-  nameWithType: PlayerAvatarManager.Dispose
-- uid: CustomAvatar.Player.PlayerAvatarManager.Initialize
-  name: Initialize()
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_Initialize
-  commentId: M:CustomAvatar.Player.PlayerAvatarManager.Initialize
-  fullName: CustomAvatar.Player.PlayerAvatarManager.Initialize()
-  nameWithType: PlayerAvatarManager.Initialize()
-- uid: CustomAvatar.Player.PlayerAvatarManager.Initialize*
-  name: Initialize
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_Initialize_
-  commentId: Overload:CustomAvatar.Player.PlayerAvatarManager.Initialize
-  isSpec: "True"
-  fullName: CustomAvatar.Player.PlayerAvatarManager.Initialize
-  nameWithType: PlayerAvatarManager.Initialize
-- uid: CustomAvatar.Player.PlayerAvatarManager.kAvatarInfoCacheFilePath
-  name: kAvatarInfoCacheFilePath
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_kAvatarInfoCacheFilePath
-  commentId: F:CustomAvatar.Player.PlayerAvatarManager.kAvatarInfoCacheFilePath
-  fullName: CustomAvatar.Player.PlayerAvatarManager.kAvatarInfoCacheFilePath
-  nameWithType: PlayerAvatarManager.kAvatarInfoCacheFilePath
-- uid: CustomAvatar.Player.PlayerAvatarManager.kCacheFileSignature
-  name: kCacheFileSignature
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_kCacheFileSignature
-  commentId: F:CustomAvatar.Player.PlayerAvatarManager.kCacheFileSignature
-  fullName: CustomAvatar.Player.PlayerAvatarManager.kCacheFileSignature
-  nameWithType: PlayerAvatarManager.kCacheFileSignature
-- uid: CustomAvatar.Player.PlayerAvatarManager.kCacheFileVersion
-  name: kCacheFileVersion
-  href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_kCacheFileVersion
-  commentId: F:CustomAvatar.Player.PlayerAvatarManager.kCacheFileVersion
-  fullName: CustomAvatar.Player.PlayerAvatarManager.kCacheFileVersion
-  nameWithType: PlayerAvatarManager.kCacheFileVersion
 - uid: CustomAvatar.Player.PlayerAvatarManager.kCustomAvatarsPath
   name: kCustomAvatarsPath
   href: api/CustomAvatar.Player.PlayerAvatarManager.html#CustomAvatar_Player_PlayerAvatarManager_kCustomAvatarsPath
@@ -1290,89 +1044,6 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Player.PlayerAvatarManager.SwitchToPreviousAvatarAsync
   nameWithType: PlayerAvatarManager.SwitchToPreviousAvatarAsync
-- uid: CustomAvatar.Player.VRPlayerInput
-  name: VRPlayerInput
-  href: api/CustomAvatar.Player.VRPlayerInput.html
-  commentId: T:CustomAvatar.Player.VRPlayerInput
-  fullName: CustomAvatar.Player.VRPlayerInput
-  nameWithType: VRPlayerInput
-- uid: CustomAvatar.Player.VRPlayerInput.allowMaintainPelvisPosition
-  name: allowMaintainPelvisPosition
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_allowMaintainPelvisPosition
-  commentId: P:CustomAvatar.Player.VRPlayerInput.allowMaintainPelvisPosition
-  fullName: CustomAvatar.Player.VRPlayerInput.allowMaintainPelvisPosition
-  nameWithType: VRPlayerInput.allowMaintainPelvisPosition
-- uid: CustomAvatar.Player.VRPlayerInput.allowMaintainPelvisPosition*
-  name: allowMaintainPelvisPosition
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_allowMaintainPelvisPosition_
-  commentId: Overload:CustomAvatar.Player.VRPlayerInput.allowMaintainPelvisPosition
-  isSpec: "True"
-  fullName: CustomAvatar.Player.VRPlayerInput.allowMaintainPelvisPosition
-  nameWithType: VRPlayerInput.allowMaintainPelvisPosition
-- uid: CustomAvatar.Player.VRPlayerInput.Dispose
-  name: Dispose()
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_Dispose
-  commentId: M:CustomAvatar.Player.VRPlayerInput.Dispose
-  fullName: CustomAvatar.Player.VRPlayerInput.Dispose()
-  nameWithType: VRPlayerInput.Dispose()
-- uid: CustomAvatar.Player.VRPlayerInput.Dispose*
-  name: Dispose
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_Dispose_
-  commentId: Overload:CustomAvatar.Player.VRPlayerInput.Dispose
-  isSpec: "True"
-  fullName: CustomAvatar.Player.VRPlayerInput.Dispose
-  nameWithType: VRPlayerInput.Dispose
-- uid: CustomAvatar.Player.VRPlayerInput.Initialize
-  name: Initialize()
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_Initialize
-  commentId: M:CustomAvatar.Player.VRPlayerInput.Initialize
-  fullName: CustomAvatar.Player.VRPlayerInput.Initialize()
-  nameWithType: VRPlayerInput.Initialize()
-- uid: CustomAvatar.Player.VRPlayerInput.Initialize*
-  name: Initialize
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_Initialize_
-  commentId: Overload:CustomAvatar.Player.VRPlayerInput.Initialize
-  isSpec: "True"
-  fullName: CustomAvatar.Player.VRPlayerInput.Initialize
-  nameWithType: VRPlayerInput.Initialize
-- uid: CustomAvatar.Player.VRPlayerInput.inputChanged
-  name: inputChanged
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_inputChanged
-  commentId: E:CustomAvatar.Player.VRPlayerInput.inputChanged
-  fullName: CustomAvatar.Player.VRPlayerInput.inputChanged
-  nameWithType: VRPlayerInput.inputChanged
-- uid: CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl(CustomAvatar.Tracking.DeviceUse,CustomAvatar.Tracking.FingerCurl@)
-  name: TryGetFingerCurl(DeviceUse, out FingerCurl)
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_TryGetFingerCurl_CustomAvatar_Tracking_DeviceUse_CustomAvatar_Tracking_FingerCurl__
-  commentId: M:CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl(CustomAvatar.Tracking.DeviceUse,CustomAvatar.Tracking.FingerCurl@)
-  name.vb: TryGetFingerCurl(DeviceUse, ByRef FingerCurl)
-  fullName: CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl(CustomAvatar.Tracking.DeviceUse, out CustomAvatar.Tracking.FingerCurl)
-  fullName.vb: CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl(CustomAvatar.Tracking.DeviceUse, ByRef CustomAvatar.Tracking.FingerCurl)
-  nameWithType: VRPlayerInput.TryGetFingerCurl(DeviceUse, out FingerCurl)
-  nameWithType.vb: VRPlayerInput.TryGetFingerCurl(DeviceUse, ByRef FingerCurl)
-- uid: CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl*
-  name: TryGetFingerCurl
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_TryGetFingerCurl_
-  commentId: Overload:CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl
-  isSpec: "True"
-  fullName: CustomAvatar.Player.VRPlayerInput.TryGetFingerCurl
-  nameWithType: VRPlayerInput.TryGetFingerCurl
-- uid: CustomAvatar.Player.VRPlayerInput.TryGetPose(CustomAvatar.Tracking.DeviceUse,Pose@)
-  name: TryGetPose(DeviceUse, out Pose)
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_TryGetPose_CustomAvatar_Tracking_DeviceUse_Pose__
-  commentId: M:CustomAvatar.Player.VRPlayerInput.TryGetPose(CustomAvatar.Tracking.DeviceUse,Pose@)
-  name.vb: TryGetPose(DeviceUse, ByRef Pose)
-  fullName: CustomAvatar.Player.VRPlayerInput.TryGetPose(CustomAvatar.Tracking.DeviceUse, out Pose)
-  fullName.vb: CustomAvatar.Player.VRPlayerInput.TryGetPose(CustomAvatar.Tracking.DeviceUse, ByRef Pose)
-  nameWithType: VRPlayerInput.TryGetPose(DeviceUse, out Pose)
-  nameWithType.vb: VRPlayerInput.TryGetPose(DeviceUse, ByRef Pose)
-- uid: CustomAvatar.Player.VRPlayerInput.TryGetPose*
-  name: TryGetPose
-  href: api/CustomAvatar.Player.VRPlayerInput.html#CustomAvatar_Player_VRPlayerInput_TryGetPose_
-  commentId: Overload:CustomAvatar.Player.VRPlayerInput.TryGetPose
-  isSpec: "True"
-  fullName: CustomAvatar.Player.VRPlayerInput.TryGetPose
-  nameWithType: VRPlayerInput.TryGetPose
 - uid: CustomAvatar.PoseManager
   name: PoseManager
   href: api/CustomAvatar.PoseManager.html
@@ -1881,55 +1552,48 @@ references:
   commentId: N:CustomAvatar.Scripts
   fullName: CustomAvatar.Scripts
   nameWithType: CustomAvatar.Scripts
+- uid: CustomAvatar.Scripts.TwistRelaxerV2
+  name: TwistRelaxerV2
+  href: api/CustomAvatar.Scripts.TwistRelaxerV2.html
+  commentId: T:CustomAvatar.Scripts.TwistRelaxerV2
+  fullName: CustomAvatar.Scripts.TwistRelaxerV2
+  nameWithType: TwistRelaxerV2
+- uid: CustomAvatar.Scripts.TwistRelaxerV2.children
+  name: children
+  href: api/CustomAvatar.Scripts.TwistRelaxerV2.html#CustomAvatar_Scripts_TwistRelaxerV2_children
+  commentId: F:CustomAvatar.Scripts.TwistRelaxerV2.children
+  fullName: CustomAvatar.Scripts.TwistRelaxerV2.children
+  nameWithType: TwistRelaxerV2.children
+- uid: CustomAvatar.Scripts.TwistRelaxerV2.parent
+  name: parent
+  href: api/CustomAvatar.Scripts.TwistRelaxerV2.html#CustomAvatar_Scripts_TwistRelaxerV2_parent
+  commentId: F:CustomAvatar.Scripts.TwistRelaxerV2.parent
+  fullName: CustomAvatar.Scripts.TwistRelaxerV2.parent
+  nameWithType: TwistRelaxerV2.parent
+- uid: CustomAvatar.Scripts.TwistRelaxerV2.parentChildCrossfade
+  name: parentChildCrossfade
+  href: api/CustomAvatar.Scripts.TwistRelaxerV2.html#CustomAvatar_Scripts_TwistRelaxerV2_parentChildCrossfade
+  commentId: F:CustomAvatar.Scripts.TwistRelaxerV2.parentChildCrossfade
+  fullName: CustomAvatar.Scripts.TwistRelaxerV2.parentChildCrossfade
+  nameWithType: TwistRelaxerV2.parentChildCrossfade
+- uid: CustomAvatar.Scripts.TwistRelaxerV2.twistAngleOffset
+  name: twistAngleOffset
+  href: api/CustomAvatar.Scripts.TwistRelaxerV2.html#CustomAvatar_Scripts_TwistRelaxerV2_twistAngleOffset
+  commentId: F:CustomAvatar.Scripts.TwistRelaxerV2.twistAngleOffset
+  fullName: CustomAvatar.Scripts.TwistRelaxerV2.twistAngleOffset
+  nameWithType: TwistRelaxerV2.twistAngleOffset
+- uid: CustomAvatar.Scripts.TwistRelaxerV2.weight
+  name: weight
+  href: api/CustomAvatar.Scripts.TwistRelaxerV2.html#CustomAvatar_Scripts_TwistRelaxerV2_weight
+  commentId: F:CustomAvatar.Scripts.TwistRelaxerV2.weight
+  fullName: CustomAvatar.Scripts.TwistRelaxerV2.weight
+  nameWithType: TwistRelaxerV2.weight
 - uid: CustomAvatar.Scripts.UpperArmRelaxer
   name: UpperArmRelaxer
   href: api/CustomAvatar.Scripts.UpperArmRelaxer.html
   commentId: T:CustomAvatar.Scripts.UpperArmRelaxer
   fullName: CustomAvatar.Scripts.UpperArmRelaxer
   nameWithType: UpperArmRelaxer
-- uid: CustomAvatar.Scripts.UpperArmRelaxer.children
-  name: children
-  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_children
-  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.children
-  fullName: CustomAvatar.Scripts.UpperArmRelaxer.children
-  nameWithType: UpperArmRelaxer.children
-- uid: CustomAvatar.Scripts.UpperArmRelaxer.ik
-  name: ik
-  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_ik
-  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.ik
-  fullName: CustomAvatar.Scripts.UpperArmRelaxer.ik
-  nameWithType: UpperArmRelaxer.ik
-- uid: CustomAvatar.Scripts.UpperArmRelaxer.parentChildCrossfade
-  name: parentChildCrossfade
-  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_parentChildCrossfade
-  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.parentChildCrossfade
-  fullName: CustomAvatar.Scripts.UpperArmRelaxer.parentChildCrossfade
-  nameWithType: UpperArmRelaxer.parentChildCrossfade
-- uid: CustomAvatar.Scripts.UpperArmRelaxer.Relax
-  name: Relax()
-  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_Relax
-  commentId: M:CustomAvatar.Scripts.UpperArmRelaxer.Relax
-  fullName: CustomAvatar.Scripts.UpperArmRelaxer.Relax()
-  nameWithType: UpperArmRelaxer.Relax()
-- uid: CustomAvatar.Scripts.UpperArmRelaxer.Relax*
-  name: Relax
-  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_Relax_
-  commentId: Overload:CustomAvatar.Scripts.UpperArmRelaxer.Relax
-  isSpec: "True"
-  fullName: CustomAvatar.Scripts.UpperArmRelaxer.Relax
-  nameWithType: UpperArmRelaxer.Relax
-- uid: CustomAvatar.Scripts.UpperArmRelaxer.twistAngleOffset
-  name: twistAngleOffset
-  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_twistAngleOffset
-  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.twistAngleOffset
-  fullName: CustomAvatar.Scripts.UpperArmRelaxer.twistAngleOffset
-  nameWithType: UpperArmRelaxer.twistAngleOffset
-- uid: CustomAvatar.Scripts.UpperArmRelaxer.weight
-  name: weight
-  href: api/CustomAvatar.Scripts.UpperArmRelaxer.html#CustomAvatar_Scripts_UpperArmRelaxer_weight
-  commentId: F:CustomAvatar.Scripts.UpperArmRelaxer.weight
-  fullName: CustomAvatar.Scripts.UpperArmRelaxer.weight
-  nameWithType: UpperArmRelaxer.weight
 - uid: CustomAvatar.Tracking
   name: CustomAvatar.Tracking
   href: api/CustomAvatar.Tracking.html
@@ -2006,31 +1670,66 @@ references:
 - uid: CustomAvatar.Tracking.FingerCurl.index
   name: index
   href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_index
-  commentId: F:CustomAvatar.Tracking.FingerCurl.index
+  commentId: P:CustomAvatar.Tracking.FingerCurl.index
+  fullName: CustomAvatar.Tracking.FingerCurl.index
+  nameWithType: FingerCurl.index
+- uid: CustomAvatar.Tracking.FingerCurl.index*
+  name: index
+  href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_index_
+  commentId: Overload:CustomAvatar.Tracking.FingerCurl.index
+  isSpec: "True"
   fullName: CustomAvatar.Tracking.FingerCurl.index
   nameWithType: FingerCurl.index
 - uid: CustomAvatar.Tracking.FingerCurl.little
   name: little
   href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_little
-  commentId: F:CustomAvatar.Tracking.FingerCurl.little
+  commentId: P:CustomAvatar.Tracking.FingerCurl.little
+  fullName: CustomAvatar.Tracking.FingerCurl.little
+  nameWithType: FingerCurl.little
+- uid: CustomAvatar.Tracking.FingerCurl.little*
+  name: little
+  href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_little_
+  commentId: Overload:CustomAvatar.Tracking.FingerCurl.little
+  isSpec: "True"
   fullName: CustomAvatar.Tracking.FingerCurl.little
   nameWithType: FingerCurl.little
 - uid: CustomAvatar.Tracking.FingerCurl.middle
   name: middle
   href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_middle
-  commentId: F:CustomAvatar.Tracking.FingerCurl.middle
+  commentId: P:CustomAvatar.Tracking.FingerCurl.middle
+  fullName: CustomAvatar.Tracking.FingerCurl.middle
+  nameWithType: FingerCurl.middle
+- uid: CustomAvatar.Tracking.FingerCurl.middle*
+  name: middle
+  href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_middle_
+  commentId: Overload:CustomAvatar.Tracking.FingerCurl.middle
+  isSpec: "True"
   fullName: CustomAvatar.Tracking.FingerCurl.middle
   nameWithType: FingerCurl.middle
 - uid: CustomAvatar.Tracking.FingerCurl.ring
   name: ring
   href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_ring
-  commentId: F:CustomAvatar.Tracking.FingerCurl.ring
+  commentId: P:CustomAvatar.Tracking.FingerCurl.ring
+  fullName: CustomAvatar.Tracking.FingerCurl.ring
+  nameWithType: FingerCurl.ring
+- uid: CustomAvatar.Tracking.FingerCurl.ring*
+  name: ring
+  href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_ring_
+  commentId: Overload:CustomAvatar.Tracking.FingerCurl.ring
+  isSpec: "True"
   fullName: CustomAvatar.Tracking.FingerCurl.ring
   nameWithType: FingerCurl.ring
 - uid: CustomAvatar.Tracking.FingerCurl.thumb
   name: thumb
   href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_thumb
-  commentId: F:CustomAvatar.Tracking.FingerCurl.thumb
+  commentId: P:CustomAvatar.Tracking.FingerCurl.thumb
+  fullName: CustomAvatar.Tracking.FingerCurl.thumb
+  nameWithType: FingerCurl.thumb
+- uid: CustomAvatar.Tracking.FingerCurl.thumb*
+  name: thumb
+  href: api/CustomAvatar.Tracking.FingerCurl.html#CustomAvatar_Tracking_FingerCurl_thumb_
+  commentId: Overload:CustomAvatar.Tracking.FingerCurl.thumb
+  isSpec: "True"
   fullName: CustomAvatar.Tracking.FingerCurl.thumb
   nameWithType: FingerCurl.thumb
 - uid: CustomAvatar.Tracking.IAvatarInput
@@ -2074,22 +1773,22 @@ references:
   isSpec: "True"
   fullName: CustomAvatar.Tracking.IAvatarInput.TryGetFingerCurl
   nameWithType: IAvatarInput.TryGetFingerCurl
-- uid: CustomAvatar.Tracking.IAvatarInput.TryGetPose(CustomAvatar.Tracking.DeviceUse,Pose@)
-  name: TryGetPose(DeviceUse, out Pose)
-  href: api/CustomAvatar.Tracking.IAvatarInput.html#CustomAvatar_Tracking_IAvatarInput_TryGetPose_CustomAvatar_Tracking_DeviceUse_Pose__
-  commentId: M:CustomAvatar.Tracking.IAvatarInput.TryGetPose(CustomAvatar.Tracking.DeviceUse,Pose@)
-  name.vb: TryGetPose(DeviceUse, ByRef Pose)
-  fullName: CustomAvatar.Tracking.IAvatarInput.TryGetPose(CustomAvatar.Tracking.DeviceUse, out Pose)
-  fullName.vb: CustomAvatar.Tracking.IAvatarInput.TryGetPose(CustomAvatar.Tracking.DeviceUse, ByRef Pose)
-  nameWithType: IAvatarInput.TryGetPose(DeviceUse, out Pose)
-  nameWithType.vb: IAvatarInput.TryGetPose(DeviceUse, ByRef Pose)
-- uid: CustomAvatar.Tracking.IAvatarInput.TryGetPose*
-  name: TryGetPose
-  href: api/CustomAvatar.Tracking.IAvatarInput.html#CustomAvatar_Tracking_IAvatarInput_TryGetPose_
-  commentId: Overload:CustomAvatar.Tracking.IAvatarInput.TryGetPose
+- uid: CustomAvatar.Tracking.IAvatarInput.TryGetTransform(CustomAvatar.Tracking.DeviceUse,Transform@)
+  name: TryGetTransform(DeviceUse, out Transform)
+  href: api/CustomAvatar.Tracking.IAvatarInput.html#CustomAvatar_Tracking_IAvatarInput_TryGetTransform_CustomAvatar_Tracking_DeviceUse_Transform__
+  commentId: M:CustomAvatar.Tracking.IAvatarInput.TryGetTransform(CustomAvatar.Tracking.DeviceUse,Transform@)
+  name.vb: TryGetTransform(DeviceUse, ByRef Transform)
+  fullName: CustomAvatar.Tracking.IAvatarInput.TryGetTransform(CustomAvatar.Tracking.DeviceUse, out Transform)
+  fullName.vb: CustomAvatar.Tracking.IAvatarInput.TryGetTransform(CustomAvatar.Tracking.DeviceUse, ByRef Transform)
+  nameWithType: IAvatarInput.TryGetTransform(DeviceUse, out Transform)
+  nameWithType.vb: IAvatarInput.TryGetTransform(DeviceUse, ByRef Transform)
+- uid: CustomAvatar.Tracking.IAvatarInput.TryGetTransform*
+  name: TryGetTransform
+  href: api/CustomAvatar.Tracking.IAvatarInput.html#CustomAvatar_Tracking_IAvatarInput_TryGetTransform_
+  commentId: Overload:CustomAvatar.Tracking.IAvatarInput.TryGetTransform
   isSpec: "True"
-  fullName: CustomAvatar.Tracking.IAvatarInput.TryGetPose
-  nameWithType: IAvatarInput.TryGetPose
+  fullName: CustomAvatar.Tracking.IAvatarInput.TryGetTransform
+  nameWithType: IAvatarInput.TryGetTransform
 - uid: CustomAvatar.UI
   name: CustomAvatar.UI
   href: api/CustomAvatar.UI.html
